@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Page - Student Grades</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link href="class_page.css" rel="stylesheet" type="text/css"/>
+    <link rel="website icon" type="jpg" href="emblem.jpg">
+</head>
+<body>
+    <div id="main-box" class="main-box">
+        <ul>
+            <a 
+            href="home.html">
+            <img src="emblem.jpg" 
+            width="60px" 
+            height="60px" 
+            style="
+            display: inline-block;
+            border-radius: 50%;
+            "
+            >
+            </a>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="careerplan.html">Careerplan</a></li>
+            <li><a href="index.html">Grades</a></li>
+            <li><a href=gpaCalculator.html>Calendar</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <div class="title-container">
+            <h1 id="class-title"></h1>
+        </div>
+        <div class="grade-container">
+            <h1 id="class-grade"></h1>
+        </div>
+        <table id="assignments-table" class="noBorder">
+            <thead>
+                <tr>
+                    <th>Assignment Name</th>
+                    <th>Grade</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Assignment rows will be added here -->
+            </tbody>
+        </table>
+
+        <div class="goal-calculator">
+            <h2>Goal Grade Calculator</h2>
+            <label for="goal-grade">Enter your goal grade:</label>
+            <input type="number" id="goal-grade" placeholder="Goal Grade" />
+            <button id="calculate-btn">Calculate</button>
+            <div id="goal-output"></div> <!-- Output area -->
+        </div>
+    </div>
+
+    <py-script>
+        from js import document, URLSearchParams, window
+        from urllib.parse import unquote
+        from pyodide.ffi import create_proxy
+        # Sample data for assignments
+        classes_list = [
+            {"class": "Geometry Honors", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                
+            ]},
+            {"class": "AP World History", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]},
+            {"class": "AP Environmental Science", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]},
+            {"class": "PE", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]},
+            {"class": "Art II Honors", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]},
+            {"class": "AP Comp Sci Principles", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]},
+            {"class": "Medical Terminology", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]},
+            {"class": "JV Basketball", "assignments": [
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+            ]}
+        ]
+        
+        # Retrieve class name from URL and decode it
+        url_params = URLSearchParams.new(window.location.search)
+        class_name = url_params.get('class')  # Get class name from URL
+        grade_value = url_params.get('numberGrade') # gets the numberGrade
+        if class_name:
+            class_name = unquote(class_name).strip()
+        if grade_value:
+            grade_value = unquote(grade_value).strip()
+        
+        # Get data for the specified class
+        class_data = next((course for course in classes_list if course['class'].lower() == class_name.lower()), None) if class_name else None
+        
+        def populate_page():
+            """Populate the page with class data or show an error if class is not found."""
+            class_title_element = document.getElementById("class-title")
+            class_grade_element = document.getElementById("class-grade")
+            table_body = document.querySelector("#assignments-table tbody")
+        
+            if not class_title_element or not table_body:
+                print("Error: Missing elements in DOM.")
+                return
+        
+            if class_data:
+                # Set the class title and grade
+                class_title_element.textContent = f"{class_data['class']}"
+                if grade_value:
+                    class_grade_element.textContent = f"Grade: {grade_value}"
+        
+                for assignment in class_data["assignments"]:
+                    row = document.createElement("tr")
+
+                    assignment_name_cell = document.createElement("td")
+                    assignment_name_cell.textContent = assignment["name"]
+                    row.appendChild(assignment_name_cell)
+
+
+                    assignment_grade_cell = document.createElement("td")
+                    assignment_grade_cell.textContent = assignment["grade"]
+                    row.appendChild(assignment_grade_cell)
+
+                    assignment_type_cell = document.createElement("td")
+                    assignment_type_cell.textContent = assignment["type"]
+                    row.appendChild(assignment_type_cell)
+                
+                    table_body.appendChild(row)
+
+        
+        def calculate_goal(event=None):
+            """Calculate the required grade to achieve the goal."""
+            goal_grade_input = document.getElementById("goal-grade")
+            goal_output_element = document.getElementById("goal-output")
+            
+            if not goal_grade_input or not goal_output_element:
+                print("Error: Required input or output element is missing.")
+                return
+            
+            # Clear previous output
+            goal_output_element.textContent = ""
+        
+            if not goal_grade_input.value.strip():
+                window.alert("Please enter a valid goal grade.")
+                return
+        
+            try:
+                # Parse goal grade
+                goal_grade = float(goal_grade_input.value)
+                if goal_grade < 0 or goal_grade > 100:
+                    window.alert("Goal grade must be between 0 and 100.")
+                    return
+        
+                # Gather current grades
+                grades = [assignment["grade"] for assignment in class_data["assignments"]]
+                sum_grades = sum(grades)
+                num_grades = len(grades)
+        
+                # Calculate needed grade
+                needed_grade = round((goal_grade * (num_grades + 1) - sum_grades), 1)
+        
+                # Determine result message
+                if needed_grade > 100:
+                    result_message = "Unfortunately, you can't reach your goal with the current grades. Keep trying your best!"
+                elif needed_grade < 0:
+                    result_message = "You have already surpassed your goal! Keep up the great work!"
+                else:
+                    result_message = f"To average a {goal_grade}, you need at least a {needed_grade} on the next assignment."
+        
+                # Display result
+                goal_output_element.textContent = result_message
+            except ValueError:
+                window.alert("Invalid input. Please enter a numeric value.")
+        
+        # Populate the page when loaded
+        populate_page()
+        
+        # Bind the calculate button to the calculate_goal function
+        calculate_btn = document.getElementById("calculate-btn")
+        if calculate_btn:
+            calculate_proxy = create_proxy(calculate_goal)
+            calculate_btn.addEventListener("click", calculate_proxy)
+        else:
+            print("Error: Calculate button not found in DOM.")
+    </py-script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Calendar</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="attendance.css" rel="stylesheet" />
+    <link rel="website icon" type="jpg" href="emblem.jpg" />
+</head>
+<body>
+    <div id="main-box" class="main-box">
+        <ul>
+            <a 
+            href="home.html">
+            <img src="emblem.jpg" 
+            width="60px" 
+            height="60px" 
+            style="
+            display: inline-block;
+            border-radius: 50%;
+            "
+            >
+            </a>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="careerplan.html">Careerplan</a></li>
+            <li><a href="index.html">Grades</a></li>
+            <li><a href=gpaCalculator.html>Calendar</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+        </ul>
+    </div>
+    <div class="attendance-header-box">
+        <h1 class="attendance-header">Dynamic Calendar</h1>   
+    </div>
+    <div class="button-box">
+        <button id="prev-button" class="prev-button"><span class="material-icons">arrow_back_ios</span></button>
+        <span id="current-month" class="current-month"></span>
+        <button id="next-button" class="next-button"><span class="material-icons">arrow_forward_ios</span></button>
+        <div class="select-box">
+            <select name="" id="" class="select">
+                <option value="Excused Absences" class="option">Excused Absences</option>
+                <option value="Unexcused Absences" class="option">Unexcused Absences</option>
+                <option value="Tardies" class="option">Tardies</option>
+                <option value="" class="option"></option>
+            </select>
+        </div>
+    </div>
+    
+
+    <div id="calendar"></div>
+    <div id="color-legend">
+    </div>
+    <py-script>
+        from js import document, window
+        import calendar
+        from datetime import datetime
+        from pyodide.ffi import create_proxy
+
+        # Global variables
+        year = datetime.now().year
+        month = datetime.now().month
+        
+        def convert_month_to_number(month_str):
+            return datetime.strptime(month_str, '%B').month
+        def convert_day_to_number(day_str):
+            return datetime.strptime(day_str, '%d').day
+        def get_background_color_by_class(class_name):
+            # Get the first element with the specified class name
+            element = document.querySelector(f".{class_name}")
+            if element:
+                # Use window.getComputedStyle to get the computed background color
+                computed_style = window.getComputedStyle(element)
+                bg_color = computed_style.getPropertyValue("background-color")
+                print(f"Background Color of {class_name}:", bg_color)
+                return bg_color
+            else:
+                print(f"No element found with class: {class_name}")
+                return None
+        def convert_date_string(date_str):
+            date_str = date_str.strip()
+            date_str = date_str.replace('st', '').replace('nd', '').replace('rd', '').replace('th', '')
+            return datetime.strptime(date_str, '%B %d %Y')
+        class AttendanceDetails:
+            excused_absences = {
+                "absence1": {
+                    "type": "medical appointment",
+                    "date": "December 9th 2024",
+                    "period": "4"
+                }, 
+                "absence2": {
+                    "type": "religious holiday",
+                    "date": "December 6th 2024",
+                    "period": "6"
+                }
+            }
+            unexcused_absences = {
+                "absence1": {
+                    "type": "Unexcused Advisory",
+                    "date": "December 19th 2024", 
+                    "period": "7" 
+                }
+            }
+            tardies = {
+                "tardy1": {
+                    "type": "tardy", 
+                    "date": " November 9th 2024", 
+                    "period": "2"
+                }, 
+                "tardy2": {
+                    "type": "tardy", 
+                    "date": "February 19th 2025",
+                    "period": "4"
+                }
+            }
+            blue_absence = {
+                "absence1": {
+                    "type": "State Reporting Absence",
+                    "date": "May 14th 2025",
+                    "period": "3"
+                }, 
+                "absence2": {
+                    "type": "State Reporting Absence",
+                    "date": "May 16th 2025",
+                    "period": "6"  
+                }
+            }
+            bad_absence = {
+                "absence1": {
+                    "type": "Suspended",
+                    "date": "March 4th 2025",
+                    "period": "4"
+                }, 
+                "absence2": {
+                    "type": "Suspended", 
+                    "date": "November 7th 2024",
+                    "period": "2"
+                }
+            }
+        
+
+            @classmethod
+            def get_excuse_absence_details(cls, absence_key, detail):
+                try:
+                    
+                    return cls.excused_absences[absence_key][detail]
+                except KeyError:
+                    return f"No details found for {absence_key} and {detail}."
+
+                
+            @classmethod
+            def get_unexcuse_absence_details(cls, absence_key, detail):
+                try:
+                    return cls.unexcused_absences[absence_key][detail]
+                except KeyError:
+                    return f"No details found for {absence_key} and {detail}."
+
+            @classmethod
+            def get_tardy_details(cls, absence_key, detail):
+                try:
+                    return cls.tardies[absence_key][detail]
+                except KeyError:
+                    return f"No details found for {absence_key} and {detail}."
+            @classmethod
+            def get_blue_absence_details(cls, absence_key, detail):
+                try:
+                    return cls.blue_absence[absence_key][detail]
+                except KeyError:
+                    return f"No details found for {absence_key} and {detail}."
+            @classmethod
+            def get_bad_absence_details(cls, absence_key, detail):
+                try: 
+                    return cls.bad_absence[absence_key][detail]
+                except KeyError:
+                    return f"No details found for {absence_key} and {detail}."
+            
+
+
+
+
+
+        # Attendance Function with Logical Error Fixed
+        def excused_absence():
+            global year, month
+            details = ["type", "date", "period"]
+            grouped_details = []
+
+            # Collect excused absence details
+            for absence_key in AttendanceDetails.excused_absences:
+                current_group = []
+                for detail in details:
+                    absence_info = AttendanceDetails.get_excuse_absence_details(absence_key, detail)
+                    if "No details found" not in absence_info:  # Check if the absence_info is valid
+                        current_group.append(absence_info)
+                if current_group:  # Only append if current_group is not empty
+                    grouped_details.append(current_group)
+
+            print("Grouped Details:", grouped_details)  # Debugging output
+
+            # List of type keywords
+            type_keywords = [
+                "ABA therapy", "Academic Detention - Victory Place", "CHS/CHS9 class", "Compass", 
+                "DFPS activities", "Driving License/Learner Permit", "Excused Admin", "Excused Counselor",
+                "Excused Court", "Excused Nurse", "Homebound - in person", "In School Activity", 
+                "In School Suspension", "Incentive Release", "Left Early", "Life-threatening illness",
+                "Loss of time - student away from school/class for part of the day", "Medical Appointment", 
+                "Military visit", "Playing Taps at funeral", "Present", "Religious Holiday", 
+                "School Related Activity", "Serving as election clerk", "State Reporting Absence"
+            ]
+            sorted_lists = sorted(grouped_details, key=lambda x: convert_date_string(x[1]))
+
+            # Create separate lists for matched details
+            matched_lists = []
+            for group in sorted_lists:
+                absence_type = group[0]  # Assuming the type is the first detail in each group
+                print(f"Checking absence type: {absence_type}")  # Debugging output
+                if absence_type.lower() in (kw.lower() for kw in type_keywords):  # Case-insensitive match
+                    matched_lists.append(group)
+
+            # Assign each matched list to a variable (dynamically if needed)
+            for idx, matched_list in enumerate(matched_lists, start=1):
+                globals()[f"matched_list_{idx}"] = matched_list  # Assigning variables like matched_list_1, matched_list_2, etc
+                globals()[f"type_{idx}"] = matched_list[0] 
+                globals()[f"date_{idx}"] = matched_list[1]
+                globals()[f"period_{idx}"] = matched_list[2]
+            
+            legend_div = document.getElementById("color-legend")
+            legend_div.classList.add("color-legend")
+            legend_div.innerHTML = ""
+            
+            # Ensure that the variables are defined before accessing them
+            if 'date_1' in globals():
+                month_1_stripped = str.split(date_1)[0]
+                month_1_number = convert_month_to_number(month_1_stripped)
+                if month == int(month_1_number):
+                    legend_title = document.createElement("h1")
+                    legend_title.textContent = f"Color Legend"
+                    legend_title.classList.add("legend")
+                    legend_div.appendChild(legend_title)
+                    # Create the details container
+                    legend_details = document.createElement("div")
+                    legend_details.classList.add("details")
+                    legend_div.appendChild(legend_details)
+                    
+                    legend_1_color = document.createElement("div")
+                    legend_1_color.classList.add("legend-color")
+                    for type in type_keywords:
+                        if type_1 in type.lower():
+                            legend_1_color.style.backgroundColor = "black"
+                        
+                    # Append the color legend inside the details box
+                    legend_details.appendChild(legend_1_color)
+
+                    # Add text details to the details container
+                    type_1_element = document.createElement("p")
+                    type_1_element.textContent = f"{type_1}"
+                    type_1_element.classList.add("legend-detail")
+                    legend_details.appendChild(type_1_element)
+                    
+                    date_1_element = document.createElement("p")
+                    date_1_element.textContent = f"{date_1}"
+                    date_1_element.classList.add("legend-detail")
+                    legend_details.appendChild(date_1_element)
+                        
+                    period_1_element = document.createElement("p")
+                    period_1_element.textContent = f"Period: {period_1}"
+                    period_1_element.classList.add("legend-detail")
+                    legend_details.appendChild(period_1_element)
+
+            if 'date_2' in globals():
+                month_2_stripped = str.split(date_2)[0]
+                month_2_number = convert_month_to_number(month_2_stripped)
+                if month == int(month_2_number):
+
+                    legend_2_details = document.createElement("div")
+                    legend_2_details.classList.add("details-2")
+                    legend_div.appendChild(legend_2_details)
+                    
+                    legend_2_color = document.createElement("div")
+                    legend_2_color.classList.add("legend-color-2")
+                    for type in type_keywords:
+                        if type_2 in type.lower():
+                            legend_2_color.style.backgroundColor = "black"
+                        
+                    # Append the color legend inside the details box
+                    legend_2_details.appendChild(legend_2_color)
+
+                    # Add text details to the details container
+                    type_2_element = document.createElement("p")
+                    type_2_element.textContent = f"{type_2}"
+                    type_2_element.classList.add("legend-detail-2")
+                    legend_2_details.appendChild(type_2_element)
+                    
+                    date_2_element = document.createElement("p")
+                    date_2_element.textContent = f"{date_2}"
+                    date_2_element.classList.add("legend-detail-2")
+                    legend_2_details.appendChild(date_2_element)
+                        
+                    period_2_element = document.createElement("p")
+                    period_2_element.textContent = f"Period: {period_2}"
+                    period_2_element.classList.add("legend-detail-2")
+                    legend_2_details.appendChild(period_2_element)
+
+
+        excused_absence()
+        def unexcuse_absence():
+            global year, month
+            details = ["type", "date", "period"]
+            grouped_details = []
+            for absence_key in AttendanceDetails.unexcused_absences:
+                current_group = []
+                for detail in details:
+                    absence_info = AttendanceDetails.get_unexcuse_absence_details(absence_key, detail)
+                    if "No Details Found" not in absence_info:
+                        current_group.append(absence_info)
+                if current_group:
+                    grouped_details.append(current_group)
+            type_keywords = [
+            "Administrative Emergency Removal", "Unexcused", "Unexcused Advisory", "Begin TP"
+            ]
+            matched_lists = []
+            sorted_lists = sorted(grouped_details, key=lambda x: convert_date_string(x[1]))
+            
+            for group in sorted_lists:
+                absence_type = group[0]
+                if absence_type.lower() in (kw.lower() for kw in type_keywords):
+                    matched_lists.append(group)
+            for idx, matched_list in enumerate(matched_lists, start=1):
+                globals()[f"un_matched_list_{idx}"] = matched_list
+                globals()[f"un_type_{idx}"] = matched_list[0]
+                globals()[f"un_date_{idx}"] = matched_list[1]
+                globals()[f"un_period_{idx}"] = matched_list[2]
+            
+
+            legend_div = document.getElementById("color-legend")
+            if "un_date_1" in globals():
+                month_1_stripped = str.split(un_date_1)[0]
+                month_1_number = convert_month_to_number(month_1_stripped)
+                if month == int(month_1_number):
+                    legend_title = document.createElement("h1")
+                    legend_title.textContent = f"Color Legend"
+                    legend_title.classList.add("legend")
+
+                    un_legend_details = document.createElement("div")
+                    un_legend_details.classList.add("details-3")
+                    legend_div.appendChild(un_legend_details)
+
+                    un_legend_1_color = document.createElement("div")
+                    un_legend_1_color.classList.add("legend-color-3")
+                    for type in type_keywords:
+                        if un_type_1.lower() in type.lower():
+                            un_legend_1_color.style.backgroundColor = "red"
+                        
+                    # Append the color legend inside the details box
+                    un_legend_details.appendChild(un_legend_1_color)
+                    
+                    # Add text details to the details container
+                    un_type_1_element = document.createElement("p")
+                    un_type_1_element.textContent = f"{un_type_1}"
+                    un_type_1_element.classList.add("legend-detail-3")
+                    un_legend_details.appendChild(un_type_1_element)
+                    
+                    un_date_1_element = document.createElement("p")
+                    un_date_1_element.textContent = f"{un_date_1}"
+                    un_date_1_element.classList.add("legend-detail-3")
+                    un_legend_details.appendChild(un_date_1_element)
+                        
+                    un_period_1_element = document.createElement("p")
+                    un_period_1_element.textContent = f"Period: {un_period_1}"
+                    un_period_1_element.classList.add("legend-detail-3")
+                    un_legend_details.appendChild(un_period_1_element)
+
+           
+                    
+        unexcuse_absence()
+        def tardy():
+            global year, month
+            details = ["type", "date", "period"]
+            grouped_details = []
+            for absence_key in AttendanceDetails.tardies:
+                current_group = []
+                for detail in details:
+                    absence_info = AttendanceDetails.get_tardy_details(absence_key, detail)
+                    if "No Details Found" not in absence_info:
+                        current_group.append(absence_info)
+                if current_group:
+                    grouped_details.append(current_group)
+            
+
+            matched_lists = []
+            sorted_lists = sorted(grouped_details, key=lambda x: convert_date_string(x[1]))
+            for group in sorted_lists:
+                absence_type = group[0]
+                if absence_type.lower() == "tardy":
+                    matched_lists.append(group)
+            for idx, matched_list in enumerate(matched_lists, start=1):
+                globals()[f"matched_list_{idx}"] = matched_list
+                globals()[f"t_type_{idx}"] = matched_list[0]
+                globals()[f"t_date_{idx}"] = matched_list[1]
+                globals()[f"t_period_{idx}"] = matched_list[2]
+
+
+
+            legend_div = document.getElementById("color-legend")
+            if "t_date_1" in globals():
+                month_1_stripped = str.split(t_date_1)[0]
+                month_1_number = convert_month_to_number(month_1_stripped)
+                if month == int(month_1_number):
+                    t_legend_details = document.createElement("div")
+                    t_legend_details.classList.add("details-4")
+                    legend_div.appendChild(t_legend_details)
+
+
+                    t_legend_1_color = document.createElement("div")
+                    t_legend_1_color.classList.add("legend-color-4")
+                    if "tardy" in t_type_1.lower():
+                        t_legend_1_color.style.backgroundColor = "#bf75c4"
+                    t_legend_details.appendChild(t_legend_1_color)
+                    
+                    t_type_1_element = document.createElement("p")
+                    t_type_1_element.textContent = f"{t_type_1}"
+                    t_type_1_element.classList.add("legend-detail-4")
+                    t_legend_details.appendChild(t_type_1_element)
+
+                    t_date_1_element = document.createElement("p")
+                    t_date_1_element.textContent = f"{t_date_1}"
+                    t_date_1_element.classList.add("legend-detail-4")
+                    t_legend_details.appendChild(t_date_1_element)
+
+
+                    t_period_1_element = document.createElement("p")
+                    t_period_1_element.textContent = f"Period: {t_period_1}"
+                    t_period_1_element.classList.add("legend-detail-4")
+                    t_legend_details.appendChild(t_period_1_element)
+            
+            if "t_date_2" in globals():
+                month_2_stripped = str.split(t_date_2)[0]
+                month_2_number = convert_month_to_number(month_2_stripped)
+                if month == int(month_2_number):
+                    t_legend_details_2 = document.createElement("div")
+                    t_legend_details_2.classList.add("details-5")
+                    legend_div.appendChild(t_legend_details_2)
+    
+    
+                    t_legend_2_color = document.createElement("div")
+                    t_legend_2_color.classList.add("legend-color-5")
+                    if "tardy" in t_type_2.lower():
+                        t_legend_2_color.style.backgroundColor = "#bf75c4"
+                    t_legend_details_2.appendChild(t_legend_2_color)
+                        
+                    t_type_2_element = document.createElement("p")
+                    t_type_2_element.textContent = f"{t_type_2}"
+                    t_type_2_element.classList.add("legend-detail-5")
+                    t_legend_details_2.appendChild(t_type_2_element)
+    
+                    t_date_2_element = document.createElement("p")
+                    t_date_2_element.textContent = f"{t_date_2}"
+                    t_date_2_element.classList.add("legend-detail-5")
+                    t_legend_details_2.appendChild(t_date_2_element)
+    
+    
+                    t_period_2_element = document.createElement("p")
+                    t_period_2_element.textContent = f"Period: {t_period_2}"
+                    t_period_2_element.classList.add("legend-detail-5")
+                    t_legend_details_2.appendChild(t_period_2_element)
+
+
+
+
+        tardy()
+
+        def blue():
+            global year, month
+            details = ["type", "date", "period"]
+            grouped_details = []
+            for absence_key in AttendanceDetails.blue_absence:
+                current_group = []
+                for detail in details:
+                    absence_info = AttendanceDetails.get_blue_absence_details(absence_key, detail)
+                    if "No Details Found" not in absence_info:
+                        current_group.append(absence_info)
+                if current_group:
+                    grouped_details.append(current_group)   
+
+            matched_lists = []
+            sorted_lists = sorted(grouped_details, key=lambda x: convert_date_string(x[1]))
+            for group in sorted_lists:
+                absence_type = group[0]
+                if absence_type.lower() in "State Reporting Absence".lower():
+                    matched_lists.append(group)
+            for idx, matched_list in enumerate(matched_lists, start=1):
+                globals()[f"matched_list_{idx}"] = matched_list
+                globals()[f"b_type_{idx}"] = matched_list[0]
+                globals()[f"b_date_{idx}"] = matched_list[1]
+                globals()[f"b_period_{idx}"] = matched_list[2]
+            legend_div = document.getElementById("color-legend")
+            if "b_date_1" in globals():
+                month_1_stripped = str.split(b_date_1)[0]
+                month_1_number = convert_month_to_number(month_1_stripped)
+                if month == int(month_1_number):
+                    legend_title = document.createElement("h1")
+                    legend_title.textContent = f"Color Legend"
+                    legend_title.classList.add("legend")
+                    legend_div.appendChild(legend_title)
+
+                    b_legend_details = document.createElement("div")
+                    b_legend_details.classList.add("details-6")
+                    legend_div.appendChild(b_legend_details)
+
+
+                    b_legend_color = document.createElement("div")
+                    b_legend_color.classList.add("legend-color-6")
+                    if "State Reporting Absence".lower() in b_type_1.lower():
+                        b_legend_color.style.backgroundColor = "blue"
+                    b_legend_details.appendChild(b_legend_color)
+                        
+                    b_type_1_element = document.createElement("p")
+                    b_type_1_element.textContent = f"{b_type_1}"
+                    b_type_1_element.classList.add("legend-detail-6")
+                    b_legend_details.appendChild(b_type_1_element)
+
+                    b_date_1_element = document.createElement("p")
+                    b_date_1_element.textContent = f"{b_date_1}"
+                    b_date_1_element.classList.add("legend-detail-6")
+                    b_legend_details.appendChild(b_date_1_element)
+
+
+                    b_period_1_element = document.createElement("p")
+                    b_period_1_element.textContent = f"Period: {b_period_1}"
+                    b_period_1_element.classList.add("legend-detail-6")
+                    b_legend_details.appendChild(b_period_1_element)
+            if "b_date_2" in globals():
+                month_2_stripped = str.split(b_date_2)[0]
+                month_2_number = convert_month_to_number(month_2_stripped)
+                if month == int(month_2_number):
+                    b_legend_details_2 = document.createElement("div")
+                    b_legend_details_2.classList.add("details-7")
+                    legend_div.appendChild(b_legend_details_2)
+
+
+                    b_legend_color_2 = document.createElement("div")
+                    b_legend_color_2.classList.add("legend-color-7")
+                    if "State Reporting Absence".lower() in b_type_1.lower():
+                        b_legend_color_2.style.backgroundColor = "blue"
+                    b_legend_details_2.appendChild(b_legend_color_2)
+                        
+                    b_type_2_element = document.createElement("p")
+                    b_type_2_element.textContent = f"{b_type_2}"
+                    b_type_2_element.classList.add("legend-detail-7")
+                    b_legend_details_2.appendChild(b_type_2_element)
+
+                    b_date_2_element = document.createElement("p")
+                    b_date_2_element.textContent = f"{b_date_2}"
+                    b_date_2_element.classList.add("legend-detail-7")
+                    b_legend_details_2.appendChild(b_date_2_element)
+
+
+                    b_period_2_element = document.createElement("p")
+                    b_period_2_element.textContent = f"Period: {b_period_2}"
+                    b_period_2_element.classList.add("legend-detail-7")
+                    b_legend_details_2.appendChild(b_period_2_element)
+
+
+
+                
+
+        blue()
+
+        def bad_absence():
+            global year, month
+            details = ["type", "date", "period"]
+            grouped_details = []
+            for absence_key in AttendanceDetails.bad_absence:
+                current_group = []
+                for detail in details:
+                    absence_info = AttendanceDetails.get_bad_absence_details(absence_key, detail)
+                    if "No Details Found" not in absence_info:
+                        current_group.append(absence_info)
+                if current_group:
+                    grouped_details.append(current_group)
+            
+            matched_lists = []
+            sorted_lists = sorted(grouped_details, key=lambda x: convert_date_string(x[1]))
+            type_keywords = ["Multiple Attendance Codes", "Suspended"]
+            for group in sorted_lists:
+                absence_type = group[0]
+                if absence_type.lower() in (kw.lower() for kw in type_keywords):
+                    matched_lists.append(group)
+                    
+            for idx, matched_list in enumerate(matched_lists, start=1):
+                globals()[f"bad_matched_list_{idx}"] = matched_list
+                globals()[f"bad_type_{idx}"] = matched_list[0]
+                globals()[f"bad_date_{idx}"] = matched_list[1]
+                globals()[f"bad_period_{idx}"] = matched_list[2]
+
+            legend_div = document.getElementById("color-legend")
+            if "bad_date_1" in globals():
+                month_1_stripped = str.split(bad_date_1)[0]
+                month_1_number = convert_month_to_number(month_1_stripped)
+                if month == int(month_1_number):
+                    legend_title = document.createElement("h1")
+                    legend_title.textContent = "Color Legend"
+                    legend_title.classList.add("legend")
+                    legend_div.appendChild(legend_title)
+
+                    bad_legend_details = document.createElement("div")
+                    bad_legend_details.classList.add("details-8")
+                    legend_div.appendChild(bad_legend_details)
+
+                    bad_legend_1_color = document.createElement("div")
+                    bad_legend_1_color.classList.add("legend-color-8")
+                    for type in type_keywords:
+                        if type.lower() in bad_type_1.lower():
+                            bad_legend_1_color.style.backgroundColor = "orange"  # Fixed color name
+                    bad_legend_details.appendChild(bad_legend_1_color)
+                    
+                    bad_type_1_element = document.createElement("p")
+                    bad_type_1_element.textContent = f"{bad_type_1}"
+                    bad_type_1_element.classList.add("legend-detail-8")
+                    bad_legend_details.appendChild(bad_type_1_element)
+
+                    bad_date_1_element = document.createElement("p")
+                    bad_date_1_element.textContent = f"{bad_date_1}"
+                    bad_date_1_element.classList.add("legend-detail-8")
+                    bad_legend_details.appendChild(bad_date_1_element)
+
+                    bad_period_1_element = document.createElement("p")
+                    bad_period_1_element.textContent = f"Period: {bad_period_1}"
+                    bad_period_1_element.classList.add("legend-detail-8")  # Fixed class name
+                    bad_legend_details.appendChild(bad_period_1_element)
+
+            if "bad_date_2" in globals():
+                month_2_stripped = str.split(bad_date_2)[0]
+                month_2_number = convert_month_to_number(month_2_stripped)
+                if month == int(month_2_number):
+                    legend_title = document.createElement("h1")
+                    legend_title.textContent = "Color Legend"
+                    legend_title.classList.add("legend")
+                    legend_div.appendChild(legend_title)
+
+                    bad_legend_details_2 = document.createElement("div")
+                    bad_legend_details_2.classList.add("details-9")
+                    legend_div.appendChild(bad_legend_details_2)
+
+                    bad_legend_2_color = document.createElement("div")
+                    bad_legend_2_color.classList.add("legend-color-9")
+                    for type in type_keywords:
+                        if type.lower() in bad_type_2.lower():
+                            bad_legend_2_color.style.backgroundColor = "orange"
+                    bad_legend_details_2.appendChild(bad_legend_2_color)
+
+
+                    bad_type_2_element = document.createElement("p")
+                    bad_type_2_element.textContent = f"{bad_type_2}"
+                    bad_type_2_element.classList.add("legend-detail-9")
+                    bad_legend_details_2.appendChild(bad_type_2_element)
+
+                    bad_date_2_element = document.createElement("p")
+                    bad_date_2_element.textContent = f"{bad_date_2}"
+                    bad_date_2_element.classList.add("legend-detail-9")
+                    bad_legend_details_2.appendChild(bad_date_2_element)
+                    
+                    bad_period_2_element = document.createElement("p")
+                    bad_period_2_element.textContent = f"Period: {bad_period_2}"
+                    bad_period_2_element.classList.add("legend-detail-9")
+                    bad_legend_details_2.appendChild(bad_period_2_element)
+
+
+        bad_absence()  
+        def update_calendar():
+            global year, month
+            # Update the current month display
+            document.getElementById("current-month").textContent = f"{calendar.month_name[month]} {year}"
+
+            # Generate calendar HTML
+            cal = calendar.HTMLCalendar().formatmonth(year, month).splitlines()
+            calendar_div = document.getElementById("calendar")
+            calendar_div.innerHTML = ""  # Clear previous calendar
+            calendar.setfirstweekday(calendar.SUNDAY)
+            # Add headers
+            for day in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]:
+                day_element = document.createElement("div")
+                day_element.textContent = day
+                day_element.classList.add("day", "header")
+                calendar_div.appendChild(day_element)
+
+            # Add days
+            cal_matrix = calendar.monthcalendar(year, month)
+            day_1_string = str.split(date_1)[1]
+            day_1_string_2 = str.strip(day_1_string, "th")
+            day_1_number = convert_day_to_number(day_1_string_2)
+            month_1_stripped = str.split(date_1)[0]
+            month_1_number = convert_month_to_number(month_1_stripped)
+            bgColor_1 = get_background_color_by_class("legend-color")
+
+            day_2_string = str.split(date_2)[1]
+            day_2_string_2 = str.strip(day_2_string, "th")
+            day_2_number = convert_day_to_number(day_2_string_2)
+            month_2_stripped = str.split(date_2)[0]
+            month_2_number = convert_month_to_number(month_2_stripped)
+            bgColor_2 = get_background_color_by_class("legend-color-2")
+
+            day_3_string = str.split(un_date_1)[1]
+            day_3_string_2 = str.strip(day_3_string, "th")
+            day_3_number = convert_day_to_number(day_3_string_2)
+            month_3_stripped = str.split(un_date_1)[0]
+            month_3_number = convert_month_to_number(month_3_stripped)
+            bgColor_3 = get_background_color_by_class("legend-color-3")
+
+            day_4_string = str.split(t_date_1)[1]
+            day_4_string_2 = str.strip(day_4_string, "th")
+            day_4_number = convert_day_to_number(day_4_string_2)
+            bgColor_4 = get_background_color_by_class("legend-color-4")
+            month_4_stripped = str.split(t_date_1)[0]
+            month_4_number = convert_month_to_number(month_4_stripped)
+
+            day_5_string = str.split(t_date_2)[1]
+            day_5_string_2 = str.strip(day_5_string, "th")
+            day_5_number = convert_day_to_number(day_5_string_2)
+            bgColor_5 = get_background_color_by_class("legend-color-5")
+            month_5_stripped = str.split(t_date_2)[0]
+            month_5_number = convert_month_to_number(month_5_stripped)
+            
+            day_6_string = str.split(b_date_1)[1]
+            day_6_string_2 = str.strip(day_6_string, "th")
+            day_6_number = convert_day_to_number(day_6_string_2)
+            bgColor_6 = get_background_color_by_class("legend-color-6")
+            month_6_stripped = str.split(b_date_1)[0]
+            month_6_number = convert_month_to_number(month_6_stripped)
+            
+            day_7_string = str.split(b_date_2)[1]
+            day_7_string_2 = str.strip(day_7_string, "th")
+            day_7_number = convert_day_to_number(day_7_string_2)
+            bgColor_7 = get_background_color_by_class("legend-color-7")
+            month_7_stripped = str.split(b_date_2)[0]
+            month_7_number = convert_month_to_number(month_7_stripped)
+
+            day_8_string = str.split(bad_date_1)[1]
+            day_8_string_2 = str.strip(day_8_string, "th")
+            day_8_number = convert_day_to_number(day_8_string_2)
+            bgColor_8 = get_background_color_by_class("legend-color-8")
+            month_8_stripped = str.split(bad_date_1)[0]
+            month_8_number = convert_month_to_number(month_8_stripped)
+
+            day_9_string = str.split(bad_date_2)[1]
+            day_9_string_2 = str.strip(day_9_string, "th")
+            day_9_number = convert_day_to_number(day_9_string_2)
+            bgColor_9 = get_background_color_by_class("legend-color-9")
+            month_9_stripped = str.split(bad_date_2)[0]
+            month_9_number = convert_month_to_number(month_9_stripped)
+
+            
+
+
+            for week in cal_matrix:
+                for i, day in enumerate(week):
+                    day_element = document.createElement("div")
+                    day_element.textContent = f"{day}" if day != 0 else ""
+                    day_element.classList.add("day")
+
+                    
+
+                    # Get computed background color
+                    computed_style = window.getComputedStyle(day_element)
+                    background_color = computed_style.getPropertyValue("background-color")
+
+
+                    # Apply weekend highlight
+                    if i == 0 or i == 6:  # Sunday or Saturday
+                        day_element.style.backgroundColor = "#262626"
+
+    
+                    # Apply specific holiday highlights
+                    if month == 8 and (1 <= day <= 13):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 9 and day == 2:
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 10 and (11 <= day <= 14):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 11 and day == 5:
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 11 and (22 <= day <= 29):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 12 and (20 <= day <= 31):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 1 and (1 <= day <= 6):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 1 and day == 20:
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 2 and day == 17:
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 3 and (16 <= day <= 23):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 4 and (18 <= day <= 21):
+                        day_element.style.backgroundColor = "#262626"
+                    if month == 5 and (23 <= day <= 30):
+                        day_element.style.backgroundColor = "#262626"
+                    if (month == int(month_1_number)) and (day == int(day_1_number)):
+                        day_element.style.backgroundColor = bgColor_1
+                        if bgColor_1 == "black":
+                            day_element.style.color = "white"
+                    if (month == int(month_1_number)) and (day == int(day_1_number)):
+                        day_element.style.backgroundColor = bgColor_1
+                        if bgColor_1 == "black" or bgColor_1 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_2_number)) and (day == int(day_2_number)):
+                        day_element.style.backgroundColor = bgColor_2
+                        if bgColor_2 == "black" or bgColor_2 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_3_number)) and (day == int(day_3_number)):
+                        day_element.style.backgroundColor = bgColor_3
+                        if bgColor_3 == "black" or bgColor_3 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_4_number)) and (day == int(day_4_number)):
+                        day_element.style.backgroundColor = bgColor_4
+                        if bgColor_4 == "black" or bgColor_4 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_5_number)) and (day == int(day_5_number)):
+                        day_element.style.backgroundColor = bgColor_5
+                        if bgColor_5 == "black" or bgColor_5 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_6_number)) and (day == int(day_6_number)):
+                        day_element.style.backgroundColor = bgColor_6
+                        if bgColor_6 == "black" or bgColor_6 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_7_number)) and (day == int(day_7_number)):
+                        day_element.style.backgroundColor = bgColor_7
+                        if bgColor_7 == "black" or bgColor_7 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_8_number)) and (day == int(day_8_number)):
+                        day_element.style.backgroundColor = bgColor_8
+                        if bgColor_8 == "black" or bgColor_8 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+                                
+                    if (month == int(month_9_number)) and (day == int(day_9_number)):
+                        day_element.style.backgroundColor = bgColor_9
+                        if bgColor_9 == "black" or bgColor_9 == "rgb(0, 0, 0)":
+                            day_element.style.color = "white"
+
+
+                    # Append the day to the calendar
+                    calendar_div.appendChild(day_element)
+
+                    
+                    
+        def previous_month(event):
+            global year, month
+            month -= 1
+            if month == 0:
+                month = 12
+                year -= 1
+            elif month == 7:
+                month = 8
+            excused_absence()
+            unexcuse_absence()
+            tardy()
+            bad_absence()
+            blue()
+            update_calendar()
+                
+        def next_month(event):
+            global year, month
+            month += 1
+            if month == 13:
+                month = 1
+                year += 1
+            elif month == 6:
+                month = 5
+            excused_absence()
+            unexcuse_absence()
+            tardy()
+            bad_absence()
+            blue()
+            update_calendar()
+            
+        # Create proxies for the Python functions
+        previous_month_proxy = create_proxy(previous_month)
+        next_month_proxy = create_proxy(next_month)
+                
+        # Attach event listeners with the proxies
+        document.getElementById("prev-button").addEventListener("click", previous_month_proxy)
+        document.getElementById("next-button").addEventListener("click", next_month_proxy)
+
+        # Initialize calendar
+        update_calendar()
+
+    </py-script>
+</body>
+</html>

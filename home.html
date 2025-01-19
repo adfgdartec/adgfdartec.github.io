@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Home</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="website icon" type="jpg" href="emblem.jpg">
+    </head>
+
+    <body>
+        <div id="main-box" class="main-box">
+            <ul>
+                <a 
+                href="home.html">
+                <img src="emblem.jpg" 
+                width="60px" 
+                height="60px" 
+                style="
+                display: inline-block;
+                border-radius: 50%;
+                "
+                >
+                </a>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="careerplan.html">Careerplan</a></li>
+                <li><a href="index.html">Grades</a></li>
+                <li><a href=gpaCalculator.html>Calendar</a></li>
+                <li><a href="attendance.html">Attendance</a></li>
+            </ul>
+        </div>
+        <div class="header-div">
+        <h1 class="header">HAC Redesign</h1>
+        </div>
+         <ul>
+                <button 
+                    class="grades-link"
+                    onClick="getToGrades()"
+                >
+                <div class="button-container">
+                    <span class="material-icons">grading</span>
+                </div>
+                <div>
+                <h3 class="grades-header">
+                    Grades
+                </h3>
+                <p class="grades-text">
+                   See Grades for all of your classes
+                </p>
+                </div>
+                </button>
+         </ul>
+         <ul>
+                <button 
+                    class="careerplan-link" 
+                    onClick="getToCareerPlan()"
+                >
+                <div class="button-container">
+                    <span class="material-icons">pending_actions</span>
+                </div>
+                <div>
+                <h3 class="careerplan-header">
+                    Career Plan 
+                </h3>
+                <p class="careerplan-text">
+                    Click to See your plan for high school and requests for your classes.
+                </p>
+                </div>
+                </button>
+         </ul>
+         <ul>
+                <button  
+                    class="attendance-link"
+                    onClick="getToAttendance()"
+                >
+                <div class="button-container">
+                    <span class="material-icons">event</span>
+                </div>
+                <div>
+                <h3 class="attendance-header">
+                    Attendance
+                </h3>
+                <p class="attendance-text">
+                    Click to See your Absences and days you have been present
+                </p>
+                </div>
+                </button>  
+         </ul>
+         <ul>
+            <button 
+                class="schedule-link" 
+                onClick="getToSchedule()"
+            >
+            <div class="button-container">
+                <span class="material-icons">schedule</span>
+            </div>
+            <div>
+            <h3 class="schedule-header">
+                Schedule
+            </h3>
+            <p class="schedule-text">
+                Click to See your schedule for this year
+            </p>
+            </div>
+            </button>
+     </ul>
+    </body>
+     <script>
+        function getToGrades(){
+            window.location.href="index.html"
+        }
+        function getToCareerPlan(){
+            window.location.href="careerplan.html"
+        }
+        function getToAttendance(){
+            window.location.href="attendance.html"
+        }
+        function getToSchedule(){
+            window.location.href="schedule.html"
+        }
+     </script>
+</html>

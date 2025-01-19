@@ -1,0 +1,108 @@
+body, html {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    height: 100vh;
+    background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 415px) no-repeat;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+
+.main-header {
+    text-align: center;
+    color: black;
+}
+
+
+.dropdown-container {
+    text-align: center;
+    background-color: white;
+    height: 190px;
+    width: 100%;
+    margin-top: 10vh;
+    position: relative;
+    border: 4px solid white;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid black;
+    border-radius: 14px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 20px auto;
+    overflow: hidden;
+    width: 85%;
+    height: auto;
+}
+
+th, td {
+    border: none;
+    padding: 8px;
+}
+
+th {
+    width: 25%;
+    background-color: #333;
+    color: white;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 2%;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+select {
+    padding: 12px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid black;
+    position: relative;
+    top: 0px;
+    color: black;
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+.main-box {
+    display: grid;
+    place-items: center;
+    height: 10vh;
+    width: 100%;
+    position: fixed; /* Ensures it stays fixed on the screen */
+    top: 0; /* Stays at the top */
+    z-index: 1000; /* Keeps it above other elements */
+    background: black;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: shadow for better visibility */
+}
+.main-box ul {
+    display: flex; /* Flexbox for alignment */
+    list-style-type: none;
+    color: white;
+    overflow: hidden;
+    width: fit-content; /* Shrinks to fit content */
+    height: 75%;
+    align-items: center;
+    margin: 0 auto; /* Centers the element horizontally */
+    padding: 0;
+}
+
+.main-box ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    overflow: hidden;
+    padding: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 30px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    align-items: center;
+    font-weight: bold;
+}

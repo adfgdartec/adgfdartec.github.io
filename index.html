@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Grades Report</title>
+    
+    <!-- PyScript dependencies must come before other scripts -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link rel="website icon" type="jpg" href="emblem.jpg">
+    <style>
+        body, html {
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 415px) no-repeat!important;
+            margin: 0;
+            padding: 0;
+        }
+
+        #class-dropdown {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #2a3433;
+            color: #e2fbff;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #class-dropdown:hover {
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+        }
+
+        .title-container {
+            display: grid;
+            place-items: center;
+            height: 17vh;
+            width: 100%;
+            font-family: "Cabin", sans-serif;
+            font-weight: 600;
+            font-style: normal;
+            text-align: center;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 80px;
+            margin-top: 0px;
+            background-color: #1a1d36;
+
+        }
+
+        .title-container h1 {
+            font-size: clamp(1.5rem, 2vw, 2.5rem);
+            color: #2196f3;
+            text-transform: uppercase;
+            display: grid;
+            place-items: center;
+            text-align: center; /* Centers the text within the element */
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            max-width: 80%;
+            padding: 20px;
+            overflow: visible;
+            max-height: none;
+            position: relative;
+            top: 125px;
+        }
+
+        .box {
+            font-family: "Cabin", sans-serif;
+            font-weight: 600;
+            background-color: #2a3433;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 20%;
+            max-width: 30vw;
+            text-align: left;
+            font-size: 20px;
+            color: rgb(226, 251, 255);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .box h3 {
+            font-size: 1.1rem;
+            color: #2196f3;
+            margin-bottom: 10px;
+        }
+
+        .box p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #03a9f4;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        .main-box {
+            display: grid;
+            place-items: center;
+            height: 10vh;
+            width: 100%;
+            position: fixed; 
+            top: 0; /* Stays at the top */
+            z-index: 1000; /* Keeps it above other elements */
+            background: black;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: shadow for better visibility */
+            margin: 0;
+            padding: 0;
+        }
+        .main-box ul {
+            display: flex; /* Flexbox for alignment */
+            list-style-type: none;
+            color: white;
+            overflow: hidden;
+            width: fit-content; /* Shrinks to fit content */
+            height: 75%;
+            align-items: center;
+            margin: 0 auto; /* Centers the element horizontally */
+            padding: 0;
+        }
+
+        .main-box ul li a {
+            text-decoration: none;
+            color: #ffffff;
+            overflow: hidden;
+            padding: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            font-size: 30px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            align-items: center;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="main-box" class="main-box">
+        <ul>
+            <a 
+            href="home.html">
+            <img src="emblem.jpg" 
+            width="60px" 
+            height="60px" 
+            style="
+            display: inline-block;
+            border-radius: 50%;
+            "
+            >
+            </a>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="careerplan.html">Careerplan</a></li>
+            <li><a href="index.html">Grades</a></li>
+            <li><a href=gpaCalculator.html>Calendar</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+        </ul>
+    </div>
+    <div class="title-container">
+        <h1>Student Grades Report</h1>
+        <select id="class-dropdown">
+            <option value="Select">Select A Class</option>
+            <option value="All">All Classes</option>
+            <option value="Geometry Honors">Geometry Honors</option>
+            <option value="AP World History">AP World History</option>
+            <option value="AP Environmental Science">AP Environmental Science</option>
+            <option value="PE">PE</option>
+            <option value="Art II Honors">Art II Honors</option>
+            <option value="AP Comp Sci Principles">AP Comp Sci Principles</option>
+            <option value="Medical Terminology">Medical Terminology</option>
+            <option value="JV Basketball">JV Basketball</option>
+        </select>
+    </div>
+
+    <div class="container" id="grades-container">
+        <div class="box" id="box-1" data-class="Geometry Honors">
+            <h3 id="class-1"></h3>
+            <p id="grade-1"></p>
+            <p id="GPA-1"></p>
+        </div>
+        <div class="box" id="box-2" data-class="AP World History">
+            <h3 id="class-2"></h3>
+            <p id="grade-2"></p>
+            <p id="GPA-2"></p>
+        </div>
+        <div class="box" id="box-3" data-class="AP Environmental Science">
+            <h3 id="class-3"></h3>
+            <p id="grade-3"></p>
+            <p id="GPA-3"></p>
+        </div>
+        <div class="box" id="box-4" data-class="PE">
+            <h3 id="class-4"></h3>
+            <p id="grade-4"></p>
+            <p id="GPA-4"></p>
+        </div>
+        <div class="box" id="box-5" data-class="Art II Honors">
+            <h3 id="class-5"></h3>
+            <p id="grade-5"></p>
+            <p id="GPA-5"></p>
+        </div>
+        <div class="box" id="box-6" data-class="AP Comp Sci Principles">
+            <h3 id="class-6"></h3>
+            <p id="grade-6"></p>
+            <p id="GPA-6"></p>
+        </div>
+        <div class="box" id="box-7" data-class="Medical Terminology">
+            <h3 id="class-7"></h3>
+            <p id="grade-7"></p>
+            <p id="GPA-7"></p>
+        </div>
+        <div class="box" id="box-8" data-class="JV Basketball">
+            <h3 id="class-8"></h3>
+            <p id="grade-8"></p>
+            <p id="GPA-8"></p>
+        </div>
+    </div>
+
+    <py-script>
+from js import document
+
+# Example classesList
+classesList = [
+    {"class": "Geometry Honors", "type": "Honors GT", "numberGrade": 95},
+    {"class": "AP World History", "type": "AP", "numberGrade": 88},
+    {"class": "AP Environmental Science", "type": "AP", "numberGrade": 91},
+    {"class": "PE", "type": "Normal", "numberGrade": 98},
+    {"class": "Art II Honors", "type": "Honors GT", "numberGrade": 95},
+    {"class": "AP Comp Sci Principles", "type": "AP", "numberGrade": 88},
+    {"class": "Medical Terminology", "type": "Normal", "numberGrade": 91},
+    {"class": "JV Basketball", "type": "Normal", "numberGrade": 98},
+]
+
+def get_grade_and_gpa(number_grade, scale):
+    """Given a number grade and scale, return the letter grade and GPA."""
+    grade_ranges = [
+        (96.5, 'A+', scale[0]),
+        (93.5, 'A', scale[1]),
+        (89.5, 'A-', scale[2]),
+        (86.5, 'B+', scale[3]),
+        (83.5, 'B', scale[4]),
+        (79.5, 'B-', scale[5]),
+        (76.5, 'C+', scale[6]),
+        (73.5, 'C', scale[7]),
+        (70.5, 'C-', scale[8]),
+        (70, 'D', scale[9]),
+        (0, 'F', 0.0),
+    ]
+
+    for lower, letter_grade, gpa in grade_ranges:
+        if number_grade >= lower:
+            return letter_grade, gpa
+
+def convert_number_grades():
+    """Convert number grades to letter grades and GPA."""
+    scales = {
+        "Honors GT": [5.5, 5.3, 5.1, 4.9, 4.7, 4.5, 4.3, 4.1, 3.9, 3.7],
+        "Normal": [5.0, 4.8, 4.6, 4.4, 4.2, 4.0, 3.8, 3.6, 3.4, 3.2],
+        "AP": [6.0, 5.8, 5.6, 5.4, 5.2, 5.0, 4.8, 4.6, 4.4, 4.2],
+    }
+
+    for c in classesList:
+        class_type = c["type"]
+        scale = scales[class_type]
+        letter_grade, gpa = get_grade_and_gpa(c["numberGrade"], scale)
+        c["letterGrade"] = letter_grade
+        c["gpaGrade"] = gpa
+
+    update_html()
+
+def update_html():
+    """Update HTML elements with the grades."""
+    for i, c in enumerate(classesList, start=1):
+        document.getElementById(f"class-{i}").textContent = c["class"]
+        document.getElementById(f"grade-{i}").textContent = f"Grade: {c['numberGrade']}"
+        document.getElementById(f"GPA-{i}").textContent = f"GPA: {c['gpaGrade']}"
+
+# Initialize grades on page load
+convert_number_grades()
+    </py-script>
+
+    <script>
+        // Add event listeners after the document has loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dropdown filter functionality
+            document.getElementById('class-dropdown').addEventListener('change', function() {
+                const selectedClass = this.value;
+                const boxes = document.querySelectorAll('.box');
+                
+                boxes.forEach(box => {
+                    const boxClass = box.getAttribute('data-class');
+                    if (selectedClass === 'All' || selectedClass === boxClass || selectedClass === "Select") {
+                        box.classList.remove('hidden');
+                    } else {
+                        box.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Add click handlers for boxes
+            document.querySelectorAll('.box').forEach(box => {
+                box.addEventListener('click', function(event) {
+                    const classTitle = this.getAttribute('data-class');
+                    const grade = this.querySelector("p").textContent;
+                    const numberGrade = grade.split(': ')[1]
+                    window.location.href = `class_page.html?numberGrade=${encodeURIComponent(numberGrade)}&class=${encodeURIComponent(classTitle)}`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Login</title>
+    <link href="login.css" rel="stylesheet" type="text/css" />
+    <link rel="website icon" type="jpg" href="emblem.jpg">
+    </head>
+
+    <body>
+    <div>
+        <h1 class="title"> 
+            <div style="color:#2196f3">Welcome to</div>
+            <div style="font-weight: 800;color:#2196f3">House Access Center</div>
+            <br>
+         
+        <div class="login-container">
+            <div class="login-form">
+                <h2 style="color:#007BFF;">Log In</h2>
+                <!-- Remove the action attribute, use onsubmit to handle login -->
+                <form id="loginForm" onsubmit="validateLogin(event)">
+                    <div class="input-group">
+                        <input type="text" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+    
+                    <!-- Button does not need onclick anymore, it will trigger form submission -->
+                    <button type="submit" class="login-btn">Sign In</button>
+                    <p class="forgot-password">
+                        <a href="#">Forgot your password?</a>
+                    </p>
+                </form>
+                <p class="signup-link">Don't have an account? <a href="#">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function validateLogin(event) {
+            // Prevent the form from submitting and refreshing the page
+            event.preventDefault();
+            
+            // Test credentials
+            const testUsername = 'testuser';
+            const testPassword = 'password123';
+    
+            // Get the values from the form
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    
+            // Validate the credentials
+            if (username === testUsername && password === testPassword) {
+                // Redirect to the grades page if credentials match
+                window.location.href = 'grades.html';
+            } else {
+                alert('Invalid username or password. Please try again.');
+            }
+            
+        }
+    </script>
+    </body>
+    
+</html>
+
+
+
+

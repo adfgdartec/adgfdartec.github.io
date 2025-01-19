@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Calendar</title>
+        <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+        <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+        <link rel="stylesheet" href="schedule.css" media="all" />
+        <link
+    href="https://fonts.googleapis.com/css?family=Rock+Salt"
+    rel="stylesheet"
+    type="text/css" />
+    <link rel="website icon" type="jpg" href="emblem.jpg">
+    </head>
+    <body>
+        <div id="main-box" class="main-box">
+            <ul>
+                <a 
+                href="home.html">
+                <img src="emblem.jpg" 
+                width="60px" 
+                height="60px" 
+                style="
+                display: inline-block;
+                border-radius: 50%;
+                "
+                >
+                </a>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="careerplan.html">Careerplan</a></li>
+                <li><a href="index.html">Grades</a></li>
+                <li><a href=gpaCalculator.html>Calendar</a></li>
+                <li><a href="attendance.html">Attendance</a></li>
+            </ul>
+        </div>
+        <div class="dropdown-container">
+            <div id="dropdown-box">
+            </div>
+            <select id="class-dropdown">
+                <option value="Both">Both</option>
+                <option value="Schedule">Schedule</option>
+                <option value="Requests">Requests</option>
+            </select>
+        </div>
+            <table 
+                id="schedule-table" 
+                class="table"  
+                data-class="Schedule"
+                border="1"
+            >     
+            </table>
+            <table 
+                id="request-table" 
+                class="table"
+                data-class="Requests"
+                border="1"
+            >
+            </table>
+    <py-script>
+        from js import document
+        from datetime import datetime
+        year = datetime.now().year
+        class Schedule:
+                classes = {
+                    "class_1": {
+                        "class": "Advisory",
+                        "first_sem_course_name": "4340A - 17",
+                        "second_sem_course_name": "4340B - 17",
+                        "period": "0",
+                        "teacher_name": "Mcduffee, Haley",
+                        "room_location": "C103"
+                    }, 
+                    "class_2": {
+                        "class": "AP Computer Science Principles",
+                        "first_sem_course_name": "7204A - 7",
+                        "second_sem_course_name": "7204B - 7",
+                        "period": "1", 
+                        "teacher_name": "Cook, Andrea",
+                        "room_location": "B102"
+                    },
+                    "class_3": {
+                        "class": "AP Human Geography",
+                        "first_sem_course_name": "4340A - 17",
+                        "second_sem_course_name": "4340B - 17",
+                        "period": "2",
+                        "teacher_name": "Mcduffee, Haley",
+                        "room_location": "C103"
+                    }, 
+                    "class_4": {
+                        "class": "Algebra II Honors",
+                        "first_sem_course_name": "2331A - 2",
+                        "second_sem_course_name": "2331B - 2",
+                        "period": "3",
+                        "teacher_name": "Smith, Ginger",
+                        "room_location": "J105"
+                    },
+                    "class_5": {
+                        "class": "English I Honors",
+                        "first_sem_course_name": "1111A - 5",
+                        "second_sem_course_name": "1111B - 5",
+                        "period": "4",
+                        "teacher_name": "Rudorf, Arianna",
+                        "room_location": "J112"
+                    },
+                    "class_6": {
+                        "class": "Spanish II Honors",
+                        "first_sem_course_name": "6023A - 12",
+                        "second_sem_course_name": "6023B - 12",
+                        "period": "5",
+                        "teacher_name": "Conger, Reyna",
+                        "room_location": "A107"
+                    },
+                    "class_7": {
+                        "class": "Lifetime Fitness/Wellness",
+                        "first_sem_course_name": "5102A - 2",
+                        "second_sem_course_name": "5102B - 2",
+                        "period": "6",
+                        "teacher_name": "Garza, Armando",
+                        "room_location": "Gym1"
+                    },
+                    "class_8": {
+                        "class": "Biology Honors",
+                        "first_sem_course_name": "3111A - 3",
+                        "second_sem_course_name": "3111B - 3",
+                        "period": "7",
+                        "teacher_name": "Phadke, Madhavi",
+                        "room_location": "D102"
+                    },
+                    "class_9": {
+                        "class": "Prin Of Applied Engineering",
+                        "first_sem_course_name": "7300A - 4",
+                        "second_sem_course_name": "7300B - 4",
+                        "period": "8",
+                        "teacher_name": "Price, Chad",
+                        "room_location": "B103"
+                    },
+
+                }
+                requests = {
+                    "class_1": {
+                        "class": "English II Honors",
+                        "course_name": "1211Y",
+                        "request_type": "Regular Request"
+                    },
+                    "class_2": {
+                        "class": "Calculus AB AP",
+                        "course_name": "2500Y",
+                        "request_type": "Regular Request"
+                    }, 
+                    "class_3": {
+                        "class": "Chemistry Honors",
+                        "course_name": "3321Y",
+                        "request_type": "Regular Request"
+                    },
+                    "class_4": {
+                        "class": "World History Studies AP",
+                        "course_name": "4231Y",
+                        "request_type": "Regular Request"
+                    },
+                    "class_5": {
+                        "class": "Spanish III Honors",
+                        "course_name": "6033Y",
+                        "request_type": "Regular Request"
+                    },
+                    "class_6": {
+                        "class": "Art II Honors",
+                        "course_name": "6321Y", 
+                        "request_type": "Regular Request"
+                    },
+                    "class_7": {
+                        "class": "Computer Science AP",
+                        "course_name": "7203Y", 
+                        "request_type": "Regular Request"
+                    },
+                    "class_8": {
+                        "class": "Medical Terminology",
+                        "course_name": "7420Y",
+                        "request_type": "Regular Request"
+                    }, 
+                }
+            
+        
+        def showcase_details_to_screen():
+            headers = ["Course Name", "Class", "Period", 
+            "Teacher", "Room", "Day(s)", "Marking Periods",
+            "Building"]  # Updated header order
+            header_box = document.getElementById("dropdown-box")
+            table = document.getElementById("schedule-table")
+            table.innerHTML = ""  # Clear any existing content
+            header = document.createElement("h1")
+            header.innerHTML = f"{year - 1} - {year} Schedule <br>{year} - {year + 1} Requests"
+            header.classList.add("main-header")
+            header.id = "main-header"
+            header_box.appendChild(header)
+            # Create and append the header row
+            header_row = document.createElement("tr")
+            for header in headers:
+                th = document.createElement("th")
+                th.textContent = header
+                th.classList.add("schedule-table-header")
+                header_row.appendChild(th)
+            table.appendChild(header_row)
+            
+            for class_key in Schedule.classes:
+                class_data = Schedule.classes[class_key]
+
+                row_a = document.createElement("tr")
+                row_a_data = [
+                    class_data["first_sem_course_name"],
+                    f"{class_data['class']} A",
+                    class_data["period"],
+                    class_data["teacher_name"], 
+                    class_data["room_location"],
+                    "A" if 1 <= int(class_data["period"]) <= 4 else "A, B" if str(class_data["class"]) == "Advisory" else "B" ,
+                    "M1, M2" if "A".lower() in class_data["first_sem_course_name"].lower() else "N/A",
+                    "CHS9"
+                ]
+                for data in row_a_data:
+                    a_data_element = document.createElement("td")
+                    a_data_element.textContent = data if data else "N/A"
+                    a_data_element.classList.add("a-day-element")
+                    row_a.appendChild(a_data_element)
+
+                table.appendChild(row_a)
+                row_b = document.createElement("tr")
+                row_b_data = [
+                    class_data["second_sem_course_name"],
+                    f"{class_data['class']} B",
+                    class_data["period"],
+                    class_data["teacher_name"],
+                    class_data["room_location"],
+                    "A" if 1 <= int(class_data["period"]) <= 4 else "A, B" if str(class_data["class"]) == "Advisory" else "B",
+                    "M3, M4" if "B".lower() in class_data["second_sem_course_name"].lower() else "N/A",
+                    "CHS9"
+                ]
+
+                for data in row_b_data:
+                    b_day_element = document.createElement("td")
+                    b_day_element.textContent = data if data else "N/A"
+                    b_day_element.classList.add("b-day-element")
+                    row_b.appendChild(b_day_element)
+                table.appendChild(row_b)
+
+            request_headers = ["Course Name", "Class", "Request Type"]
+            table_2 = document.getElementById("request-table")
+            table_2.innerHTML = ""
+            request_header_row = document.createElement("tr")
+
+
+            for header in request_headers: 
+                request_header = document.createElement("th")
+                request_header.textContent = header
+                request_header.classList.add("schedule-table-header")
+                request_header_row.appendChild(request_header)
+            table_2.appendChild(request_header_row)
+
+
+
+            for class_key in Schedule.requests:
+                request_data = Schedule.requests[class_key]
+                row = document.createElement("tr")
+                row_data = [
+                    request_data["course_name"], 
+                    request_data["class"],
+                    request_data["request_type"]
+                ]
+                for data in row_data:
+                    request_data_element = document.createElement("td")
+                    request_data_element.textContent = data if data else "N/A"
+                    request_data_element.classList.add("request-table-element")
+                    row.appendChild(request_data_element)
+                table_2.appendChild(row)
+
+
+
+
+
+        showcase_details_to_screen()
+        </py-script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('class-dropdown').addEventListener('change', function() {
+                    const selectedTable = this.value;
+                    const tables = document.querySelectorAll('.table');
+                    const title = document.getElementById("main-header")
+                    const title_box = document.getElementById("dropdown-box")
+                    let currentYear = new Date().getFullYear()
+                    tables.forEach(table => {
+                        const tableClass = table.getAttribute('data-class');
+                        if (selectedTable === 'Both' || selectedTable === tableClass) {
+                            table.classList.remove('hidden');
+                        } else {
+                            table.classList.add('hidden');
+                        }
+                    });
+                    if (selectedTable === "Both") {
+                        title.innerHTML = (currentYear - 1) + " - " + currentYear + " Schedule <br>" 
+                        + currentYear + " - " + (currentYear + 1) + " Requests";
+                        title_box.appendChild(title)
+                    }
+                    if (selectedTable === "Schedule") {
+                        title.textContent = (currentYear- 1) + " - " + currentYear + " Schedule";
+                        title_box.appendChild(title)
+                    }
+                    if (selectedTable === "Requests") {
+                        title.textContent =  (currentYear) + " - " + (currentYear + 1) + " Requests";
+                        title_box.appendChild(title)
+                    }
+                });
+            });
+    /*const days = document.querySelectorAll(".day"); // Select all elements with the class "day"
+    days.forEach(day => {
+        const elementStyle = window.getComputedStyle(day); // Get computed styles for each "day" element
+        const backgroundColor = elementStyle.backgroundColor; // Extract the background color
+
+        // Check if the background color is black (RGB format)
+        if (backgroundColor === "rgb(0, 0, 0)") { 
+            day.style.color = "white"; // Change the text color to white
+        }
+    });*/
+
+        </script>    
+    </body>
+</html>
+
+
+
