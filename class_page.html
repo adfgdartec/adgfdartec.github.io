@@ -33,9 +33,14 @@
     <div class="container">
         <div class="title-container">
             <h1 id="class-title"></h1>
-        </div>
-        <div class="grade-container">
             <h1 id="class-grade"></h1>
+            <select class="marking-period-filter">
+                <option value="All"> All </option>
+                <option value="M1">M1</option>
+                <option value="M2">M2</option>
+                <option value="M3">M3</option>
+                <option value="M4">M4</option>
+            </select>
         </div>
         <table id="assignments-table" class="noBorder">
             <thead>
@@ -43,6 +48,7 @@
                     <th>Assignment Name</th>
                     <th>Grade</th>
                     <th>Type</th>
+                    <th> Due Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,6 +60,7 @@
             <h2>Goal Grade Calculator</h2>
             <label for="goal-grade">Enter your goal grade:</label>
             <input type="number" id="goal-grade" placeholder="Goal Grade" />
+            <input type="text" id="assignment-type" placeholder="Type Of Assignment(Performance / Summative)"/>
             <button id="calculate-btn">Calculate</button>
             <div id="goal-output"></div> <!-- Output area -->
         </div>
@@ -63,150 +70,195 @@
         from js import document, URLSearchParams, window
         from urllib.parse import unquote
         from pyodide.ffi import create_proxy
+        from datetime import datetime
         # Sample data for assignments
         classes_list = [
             {"class": "Geometry Honors", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
                 
             ]},
             {"class": "AP World History", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 84, "type": "Summative", "due_date":  "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 93, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 99, "type": "Performance", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "4/29/2024"}
             ]},
             {"class": "AP Environmental Science", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
             ]},
             {"class": "PE", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
             ]},
             {"class": "Art II Honors", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
             ]},
             {"class": "AP Comp Sci Principles", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
             ]},
             {"class": "Medical Terminology", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
             ]},
             {"class": "JV Basketball", "assignments": [
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"},
-                {"name": "Assignment 1", "grade": 85, "type": "Summative"},
-                {"name": "Assignment 2", "grade": 90, "type": "Performance"},
-                {"name": "Assignment 3", "grade": 89, "type": "Summative"}
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "10/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "1/29/2024"},
+                {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "4/29/2024"}
             ]}
         ]
         
-        # Retrieve class name from URL and decode it
+        # Define marking period dates
+        marking_periods = {
+            "M1": {"start": "8/14/2024", "end": "10/10/2024"},
+            "M2": {"start": "10/11/2024", "end": "12/20/2024"},
+            "M3": {"start": "1/3/2024", "end": "3/15/2024"},
+            "M4": {"start": "3/16/2024", "end": "5/24/2024"}
+        }
+
+        # Get URL parameters
         url_params = URLSearchParams.new(window.location.search)
-        class_name = url_params.get('class')  # Get class name from URL
-        grade_value = url_params.get('numberGrade') # gets the numberGrade
+        class_name = url_params.get('class')
+        
         if class_name:
             class_name = unquote(class_name).strip()
-        if grade_value:
-            grade_value = unquote(grade_value).strip()
         
-        # Get data for the specified class
         class_data = next((course for course in classes_list if course['class'].lower() == class_name.lower()), None) if class_name else None
-        
-        def populate_page():
-            """Populate the page with class data or show an error if class is not found."""
-            class_title_element = document.getElementById("class-title")
-            class_grade_element = document.getElementById("class-grade")
-            table_body = document.querySelector("#assignments-table tbody")
-        
-            if not class_title_element or not table_body:
-                print("Error: Missing elements in DOM.")
-                return
-        
-            if class_data:
-                # Set the class title and grade
-                class_title_element.textContent = f"{class_data['class']}"
-                if grade_value:
-                    class_grade_element.textContent = f"Grade: {grade_value}"
-        
-                for assignment in class_data["assignments"]:
-                    row = document.createElement("tr")
 
-                    assignment_name_cell = document.createElement("td")
-                    assignment_name_cell.textContent = assignment["name"]
-                    row.appendChild(assignment_name_cell)
-
-
-                    assignment_grade_cell = document.createElement("td")
-                    assignment_grade_cell.textContent = assignment["grade"]
-                    row.appendChild(assignment_grade_cell)
-
-                    assignment_type_cell = document.createElement("td")
-                    assignment_type_cell.textContent = assignment["type"]
-                    row.appendChild(assignment_type_cell)
-                
-                    table_body.appendChild(row)
+        def inside_marking_period(due_date, mp_start, mp_end):
+            assign_date = datetime.strptime(due_date, "%m/%d/%Y")
+            mp_start_date = datetime.strptime(mp_start, "%m/%d/%Y")
+            mp_end_date = datetime.strptime(mp_end, "%m/%d/%Y")
+            return mp_start_date <= assign_date <= mp_end_date
 
         
+        def get_filtered_assignments(selected_period):
+            if selected_period == "All":
+                return class_data["assignments"]
+            
+
+            select_marking_period = marking_periods[selected_period]
+            return [
+                assignment for assignment in class_data["assignments"]
+
+                if inside_marking_period(
+                    assignment["due_date"],
+                    select_marking_period["start"], 
+                    select_marking_period["end"]
+                )
+            ]
+        def populate_table(assignments):
+            table = document.querySelector("#assignments-table tbody")
+            table.innerHTML = ""
+            details = ["name", "grade", "type", "due_date"]
+            for assignment in assignments:
+                row = document.createElement("tr")
+                for detail in details:
+                    element = document.createElement("td")
+                    element.textContent = assignment[detail]
+                    row.appendChild(element)
+                table.appendChild(row)
+        def calculate_class_grades(assignments):
+            """ Calculates grade for course based on weight of assignment 
+                Performance Tasks: 55%
+                Summative Assesments(Tests): 45%    
+            """
+            if not assignments:
+                return None
+
+            performance_grades = [
+                float(assignment["grade"])
+                for assignment in assignments
+                if assignment["type"] == "Performance"
+            ]
+
+            summative_grades = [
+                float(assignment["grade"])
+                for assignment in assignments
+                if assignment["type"] ==  "Summative"
+            ]
+
+            if performance_grades:
+                performance_grade_avg = sum(performance_grades) / len(performance_grades)
+            else:
+                performance_grade_avg = 0
+            
+
+            if summative_grades:
+                summative_grade_avg = sum(summative_grades) / len(summative_grades)
+
+            weighted_avg = ((performance_grade_avg * 55) / 100) + ((summative_grade_avg * 45) / 100)
+            if performance_grade_avg == 0:
+                weighted_avg = summative_grade_avg
+            if summative_grade_avg == 0:
+                weighted_avg = performance_grade_avg
+            weighted_avg = round(weighted_avg, 2)
+
+            return weighted_avg , performance_grades, summative_grades, performance_grade_avg, summative_grade_avg
+
+
         def calculate_goal(event=None):
+            """Calculate the required grade to achieve the goal."""
             """Calculate the required grade to achieve the goal."""
             goal_grade_input = document.getElementById("goal-grade")
             goal_output_element = document.getElementById("goal-output")
+            grade_type_element = document.getElementById("assignment-type")
             
             if not goal_grade_input or not goal_output_element:
                 print("Error: Required input or output element is missing.")
@@ -214,49 +266,126 @@
             
             # Clear previous output
             goal_output_element.textContent = ""
-        
-            if not goal_grade_input.value.strip():
-                window.alert("Please enter a valid goal grade.")
-                return
-        
             try:
-                # Parse goal grade
+                assignments = get_filtered_assignments(
+                    document.querySelector(".marking-period-filter").value
+                )
+                weighted_avg, performance_grades, summative_grades, performance_grade_avg, summative_grade_avg = calculate_class_grades(assignments) 
                 goal_grade = float(goal_grade_input.value)
-                if goal_grade < 0 or goal_grade > 100:
-                    window.alert("Goal grade must be between 0 and 100.")
-                    return
+                grade_type = str(grade_type_element.value)
+                if grade_type.lower() == "performance".lower():
+                    required_performance_grade = (
+                        (goal_grade - (summative_grade_avg * 0.45)) * 
+                        (len(performance_grades) + 1) - 
+                        sum(performance_grades) * 0.45
+                    ) / 0.55
+                    #Aarav took the time to make this formula
+
+                    if (required_performance_grade < 0):
+                        result_message = f"You're already on track to exceed your goal grade!"
+                    elif (required_performance_grade > 100):
+                        result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
+                    else:
+                        performance_grades.append(goal_grade)
+                        performance_avg = sum(performance_grades) / len(performance_grades)
+                        grade_avg = round((performance_avg * 0.55) + (summative_grade_avg), 2)
+                        result_message = (
+                            f"To reach your goal grade, you would need a {round(required_performance_grade, 2)} "
+                            f"on your next performance task. Your current grade average after adding this "
+                            f"assignment would be {grade_avg}."
+                        )
+                elif grade_type.lower() == "summative".lower():
+                    required_summative_grade = (
+                        (goal_grade - (performance_grade_avg * 0.45)) * 
+                        (len(summative_grades) + 1) - 
+                        sum(summative_grades) * 0.45
+                    ) / 0.55
+                    #Aarav took the time to make this formula
+    
+                    if (required_summative_grade < 0):
+                        result_message = f"You're already on track to exceed your goal grade!"
+                    elif (required_summative_grade > 100):
+                        result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
+                    else:
+                        summative_grades.append(goal_grade)
+                        summative_avg = sum(summative_grades) / len(summative_grades)
+                        new_grade_avg = round((performance_grade_avg * 0.55) + (summative_avg), 2)
+                        result_message = (
+                            f"To reach your goal grade, you would need a {round(required_summative_grade, 2)} "
+                            f"on your next summative assessment. Your current grade average after adding this "
+                            f"assignment would be {grade_avg}."
+                        )
+                else: 
+                    result_message = "Please select a valid assignment type (Performance or Summative)."
         
-                # Gather current grades
-                grades = [assignment["grade"] for assignment in class_data["assignments"]]
-                sum_grades = sum(grades)
-                num_grades = len(grades)
-        
-                # Calculate needed grade
-                needed_grade = round((goal_grade * (num_grades + 1) - sum_grades), 1)
-        
-                # Determine result message
-                if needed_grade > 100:
-                    result_message = "Unfortunately, you can't reach your goal with the current grades. Keep trying your best!"
-                elif needed_grade < 0:
-                    result_message = "You have already surpassed your goal! Keep up the great work!"
-                else:
-                    result_message = f"To average a {goal_grade}, you need at least a {needed_grade} on the next assignment."
-        
-                # Display result
+
                 goal_output_element.textContent = result_message
+
             except ValueError:
                 window.alert("Invalid input. Please enter a numeric value.")
+
+
+
+
+
+            
         
-        # Populate the page when loaded
+        def handle_filter_change(event):
+            try:
+                option_period = event.target.value
+                filtered_assignments = get_filtered_assignments(option_period)
+                populate_table(filtered_assignments)
+
+                new_grade, _, _, _, _= calculate_class_grades(filtered_assignments)
+                class_avg_element = document.getElementById("class-grade")
+
+                if new_grade and class_avg_element  is not None:
+                    class_avg_element.textContent = f"Grade: {new_grade}"
+
+                
+            except Exception as e:
+                print("Filtering error", e)
+
+
+
+
+        def populate_page():
+            """Initialize the page with class data."""
+            try:
+                class_title_element = document.getElementById("class-title")
+                class_avg_element = document.getElementById("class-grade")
+                
+                if not class_title_element:
+                    print("Error: Missing elements in DOM")
+                    return
+        
+                if class_data:
+                    class_title_element.textContent = f"{class_data['class']}"
+                    
+                    # Calculate initial grade based on all assignments
+                    initial_grade, _, _, _, _= calculate_class_grades(class_data["assignments"])
+                    if initial_grade is not None:
+                        class_avg_element.textContent = f"Grade: {initial_grade}"
+                    
+                    # Initialize with all assignments
+                    populate_table(class_data["assignments"])
+            except Exception as e:
+                print(f"Page population error: {e}")
+
+        # Initialize page
         populate_page()
         
-        # Bind the calculate button to the calculate_goal function
+        # Set up event listeners
         calculate_btn = document.getElementById("calculate-btn")
         if calculate_btn:
             calculate_proxy = create_proxy(calculate_goal)
             calculate_btn.addEventListener("click", calculate_proxy)
-        else:
-            print("Error: Calculate button not found in DOM.")
+
+        # Add marking period filter event listener
+        filter_select = document.querySelector(".marking-period-filter")
+        if filter_select:
+            filter_proxy = create_proxy(handle_filter_change)
+            filter_select.addEventListener("change", filter_proxy)
     </py-script>
 </body>
 </html>
