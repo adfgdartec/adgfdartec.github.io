@@ -9,88 +9,96 @@
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
     <link rel="website icon" type="jpg" href="emblem.jpg">
     <style>
-        body, html {
-            font-family: 'Roboto', sans-serif;
+       body, html {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 415px) no-repeat!important;
             margin: 0;
             padding: 0;
+            background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 100%) no-repeat!important;
+            overflow-x: hidden;
         }
 
-        #class-dropdown {
-            padding: 10px;
-            font-size: 1rem;
-            background-color: #2a3433;
-            color: #e2fbff;
-            border: 2px solid #2196f3;
-            border-radius: 10px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        #class-dropdown:hover {
-            box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
-        }
 
         .title-container {
-            display: grid;
-            place-items: center;
-            height: 17vh;
-            width: 100%;
-            font-family: "Cabin", sans-serif;
-            font-weight: 600;
-            font-style: normal;
-            text-align: center;
-            margin-bottom: 20px;
-            position: absolute;
+            position: fixed;
             top: 80px;
-            margin-top: 0px;
+            width: 100%;
+            height: auto;
+            padding: 20px 0;
             background-color: #1a1d36;
-
+            z-index: 999;
+            text-align: center;
         }
 
         .title-container h1 {
             font-size: clamp(1.5rem, 2vw, 2.5rem);
             color: #2196f3;
             text-transform: uppercase;
-            display: grid;
-            place-items: center;
-            text-align: center; /* Centers the text within the element */
+            margin: 0 0 15px 0;
+        }
+
+        .main-content {
+            display: flex;
+            margin-top: 300px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family:  system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+        }
+
+        .left-section {
+            width: 60%;
+            padding-right: 20px;
+            box-sizing: border-box;
+        }
+
+        .right-section {
+            width: 40%;
+            box-sizing: border-box;
+        }
+
+        .GPA-calc-box {
+            width: 60%;
+            position: sticky;
+            top: 220px;
+            margin-left: 200px;
+        }
+
+        .gpa-calc-box {
+            background-color: #03a9f4;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .class-grades-box {
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 20px;
-            max-width: 80%;
+            gap: 25px;
+            background-color: #152728;
+            border-radius: 20px;
             padding: 20px;
-            overflow: visible;
-            max-height: none;
-            position: relative;
-            top: 125px;
+            width: 100%;
         }
 
         .box {
-            font-family: "Cabin", sans-serif;
-            font-weight: 600;
             background-color: #2a3433;
             border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 20%;
-            max-width: 30vw;
-            text-align: left;
-            font-size: 20px;
+            flex: 1 1 calc(50% - 25px);
+            min-width: 200px;
+            max-width: calc(90% - 25px);
             color: rgb(226, 251, 255);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-        }
-
+        } 
         .box h3 {
             font-size: 1.1rem;
             color: #2196f3;
@@ -148,7 +156,69 @@
             align-items: center;
             font-weight: bold;
         }
+        .gpa-box {
+            background-color: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+        }
 
+        .gpa-title {
+            font-size: 42px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .gpa-text {
+            font-weight: 800;
+            font-size: 42px;
+            text-align: center;
+        }
+        .class-grades-title {
+            font-weight: 800;
+            font-size: 42px;
+            text-align: center;
+        }
+        
+
+        .class-dropdown, #class-dropdown {
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #2a3433;
+            color: #e2fbff;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        @media screen and (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+                margin-top: 220px;
+            }
+            
+            .left-section,
+            .right-section {
+                width: 90%;
+                padding: 0;
+            }
+            
+            .left-section {
+                margin-bottom: 20px;
+            }
+            
+            .box {
+                max-width: 100%;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .main-box ul li a {
+                font-size: 20px;
+                padding: 10px;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -165,10 +235,8 @@
             "
             >
             </a>
-            <li><a href="schedule.html">Schedule</a></li>
-            <li><a href="careerplan.html">Careerplan</a></li>
             <li><a href="index.html">Grades</a></li>
-            <li><a href=gpaCalculator.html>Calendar</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
             <li><a href="attendance.html">Attendance</a></li>
         </ul>
     </div>
@@ -187,111 +255,167 @@
             <option value="JV Basketball">JV Basketball</option>
         </select>
     </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="class-grades-box">
+                <h1 class="class-grades-title">Class Grades</h1>
+            </div>
+            <div class="container" id="grades-container">
+                <div class="box" id="box-1" data-class="Geometry Honors">
+                    <h3 id="class-1"></h3>
+                    <p id="grade-1"></p>
+                    <p id="GPA-1"></p>
+                </div>
+                <div class="box" id="box-2" data-class="AP World History">
+                    <h3 id="class-2"></h3>
+                    <p id="grade-2"></p>
+                    <p id="GPA-2"></p>
+                </div>
+                <div class="box" id="box-3" data-class="AP Environmental Science">
+                    <h3 id="class-3"></h3>
+                    <p id="grade-3"></p>
+                    <p id="GPA-3"></p>
+                </div>
+                <div class="box" id="box-4" data-class="PE">
+                    <h3 id="class-4"></h3>
+                    <p id="grade-4"></p>
+                    <p id="GPA-4"></p>
+                </div>
+                <div class="box" id="box-5" data-class="Art II Honors">
+                    <h3 id="class-5"></h3>
+                    <p id="grade-5"></p>
+                    <p id="GPA-5"></p>
+                </div>
+                <div class="box" id="box-6" data-class="AP Comp Sci Principles">
+                    <h3 id="class-6"></h3>
+                    <p id="grade-6"></p>
+                    <p id="GPA-6"></p>
+                </div>
+                <div class="box" id="box-7" data-class="Medical Terminology">
+                    <h3 id="class-7"></h3>
+                    <p id="grade-7"></p>
+                    <p id="GPA-7"></p>
+                </div>
+                <div class="box" id="box-8" data-class="JV Basketball">
+                    <h3 id="class-8"></h3>
+                    <p id="grade-8"></p>
+                    <p id="GPA-8"></p>
+                </div>
+            </div>
 
-    <div class="container" id="grades-container">
-        <div class="box" id="box-1" data-class="Geometry Honors">
-            <h3 id="class-1"></h3>
-            <p id="grade-1"></p>
-            <p id="GPA-1"></p>
         </div>
-        <div class="box" id="box-2" data-class="AP World History">
-            <h3 id="class-2"></h3>
-            <p id="grade-2"></p>
-            <p id="GPA-2"></p>
-        </div>
-        <div class="box" id="box-3" data-class="AP Environmental Science">
-            <h3 id="class-3"></h3>
-            <p id="grade-3"></p>
-            <p id="GPA-3"></p>
-        </div>
-        <div class="box" id="box-4" data-class="PE">
-            <h3 id="class-4"></h3>
-            <p id="grade-4"></p>
-            <p id="GPA-4"></p>
-        </div>
-        <div class="box" id="box-5" data-class="Art II Honors">
-            <h3 id="class-5"></h3>
-            <p id="grade-5"></p>
-            <p id="GPA-5"></p>
-        </div>
-        <div class="box" id="box-6" data-class="AP Comp Sci Principles">
-            <h3 id="class-6"></h3>
-            <p id="grade-6"></p>
-            <p id="GPA-6"></p>
-        </div>
-        <div class="box" id="box-7" data-class="Medical Terminology">
-            <h3 id="class-7"></h3>
-            <p id="grade-7"></p>
-            <p id="GPA-7"></p>
-        </div>
-        <div class="box" id="box-8" data-class="JV Basketball">
-            <h3 id="class-8"></h3>
-            <p id="grade-8"></p>
-            <p id="GPA-8"></p>
+        <div class="right-section">
+            <div class="GPA-calc-box" id="GPA-calc-box">
+                <div class="gpa-calc-box">
+                    <h1 class="gpa-title">GPA Calculator
+                        <select id="gpa-dropdown" class="class-dropdown">
+                            <option value="Select">Select a Type of GPA</option>
+                            <option value="Both">Both</option>
+                            <option value="Weighted">Weighted GPA</option>
+                            <option value="Unweighted">Unweighted GPA</option>
+                        </select>
+                    </h1>
+                    <div class="gpa-box" id="weighted-gpa-box" data-class="Weighted">
+                        <h2 id="weighted-gpa" >Current Weighted GPA:</h2> 
+                    </div>
+                    <div class="gpa-box" id="unweighted-gpa-box" data-class="Unweighted">
+                        <h2 id="unweighted-gpa"> Current Unweighted GPA:</h2>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <py-script>
-from js import document
+    from js import document
 
-# Example classesList
-classesList = [
-    {"class": "Geometry Honors", "type": "Honors GT", "numberGrade": 95},
-    {"class": "AP World History", "type": "AP", "numberGrade": 88},
-    {"class": "AP Environmental Science", "type": "AP", "numberGrade": 91},
-    {"class": "PE", "type": "Normal", "numberGrade": 98},
-    {"class": "Art II Honors", "type": "Honors GT", "numberGrade": 95},
-    {"class": "AP Comp Sci Principles", "type": "AP", "numberGrade": 88},
-    {"class": "Medical Terminology", "type": "Normal", "numberGrade": 91},
-    {"class": "JV Basketball", "type": "Normal", "numberGrade": 98},
-]
-
-def get_grade_and_gpa(number_grade, scale):
-    """Given a number grade and scale, return the letter grade and GPA."""
-    grade_ranges = [
-        (96.5, 'A+', scale[0]),
-        (93.5, 'A', scale[1]),
-        (89.5, 'A-', scale[2]),
-        (86.5, 'B+', scale[3]),
-        (83.5, 'B', scale[4]),
-        (79.5, 'B-', scale[5]),
-        (76.5, 'C+', scale[6]),
-        (73.5, 'C', scale[7]),
-        (70.5, 'C-', scale[8]),
-        (70, 'D', scale[9]),
-        (0, 'F', 0.0),
+    # Example classesList
+    classesList = [
+        {"class": "Geometry Honors", "type": "Honors GT", "numberGrade": 88.65},
+        {"class": "AP World History", "type": "AP", "numberGrade": 88.65},
+        {"class": "AP Environmental Science", "type": "AP", "numberGrade": 88.65},
+        {"class": "PE", "type": "Normal", "numberGrade": 88.65},
+        {"class": "Art II Honors", "type": "Honors GT", "numberGrade": 88.65},
+        {"class": "AP Comp Sci Principles", "type": "AP", "numberGrade": 88.65},
+        {"class": "Medical Terminology", "type": "Normal", "numberGrade": 88.65},
+        {"class": "JV Basketball", "type": "Normal", "numberGrade": 88.65},
     ]
 
-    for lower, letter_grade, gpa in grade_ranges:
-        if number_grade >= lower:
-            return letter_grade, gpa
+    def get_grade_and_gpa(number_grade, scale):
+        """Given a number grade and scale, return the letter grade and GPA."""
+        grade_ranges = [
+            (96.5, 'A+', scale[0]),
+            (93.5, 'A', scale[1]),
+            (89.5, 'A-', scale[2]),
+            (86.5, 'B+', scale[3]),
+            (83.5, 'B', scale[4]),
+            (79.5, 'B-', scale[5]),
+            (76.5, 'C+', scale[6]),
+            (73.5, 'C', scale[7]),
+            (70.5, 'C-', scale[8]),
+            (70, 'D', scale[9]),
+            (0, 'F', 0.0),
+        ]
 
-def convert_number_grades():
-    """Convert number grades to letter grades and GPA."""
-    scales = {
-        "Honors GT": [5.5, 5.3, 5.1, 4.9, 4.7, 4.5, 4.3, 4.1, 3.9, 3.7],
-        "Normal": [5.0, 4.8, 4.6, 4.4, 4.2, 4.0, 3.8, 3.6, 3.4, 3.2],
-        "AP": [6.0, 5.8, 5.6, 5.4, 5.2, 5.0, 4.8, 4.6, 4.4, 4.2],
-    }
+        for lower, letter_grade, gpa in grade_ranges:
+            if number_grade >= lower:
+                return letter_grade, gpa
 
-    for c in classesList:
-        class_type = c["type"]
-        scale = scales[class_type]
-        letter_grade, gpa = get_grade_and_gpa(c["numberGrade"], scale)
-        c["letterGrade"] = letter_grade
-        c["gpaGrade"] = gpa
+    def convert_number_grades():
+        """Convert number grades to letter grades and GPA."""
+        scales = {
+            "Honors GT": [5.5, 5.3, 5.1, 4.9, 4.7, 4.5, 4.3, 4.1, 3.9, 3.7],
+            "Normal": [5.0, 4.8, 4.6, 4.4, 4.2, 4.0, 3.8, 3.6, 3.4, 3.2],
+            "AP": [6.0, 5.8, 5.6, 5.4, 5.2, 5.0, 4.8, 4.6, 4.4, 4.2],
+            "unweighted": [4.0, 3.8, 3.6, 3.4, 3.2, 3.0, 2.8, 2.6, 2.4, 2.2]
+        }
 
-    update_html()
+        for c in classesList:
+            class_type = c["type"]
+            scale = scales[class_type]
+            letter_grade, gpa = get_grade_and_gpa(c["numberGrade"], scale)
+            c["letterGrade"] = letter_grade
+            c["gpaGrade"] = gpa
+            unweighted_scale = scales["unweighted"]
+            letter_grade, unweighted_gpa = get_grade_and_gpa(c["numberGrade"], unweighted_scale)
+            c["unweightedGpaGrade"] = unweighted_gpa
 
-def update_html():
-    """Update HTML elements with the grades."""
-    for i, c in enumerate(classesList, start=1):
-        document.getElementById(f"class-{i}").textContent = c["class"]
-        document.getElementById(f"grade-{i}").textContent = f"Grade: {c['numberGrade']}"
-        document.getElementById(f"GPA-{i}").textContent = f"GPA: {c['gpaGrade']}"
+        update_html()
 
-# Initialize grades on page load
-convert_number_grades()
+    def update_html():
+        """Update HTML elements with the grades."""
+        for i, c in enumerate(classesList, start=1):
+            document.getElementById(f"class-{i}").textContent = c["class"]
+            document.getElementById(f"grade-{i}").textContent = f"Grade: {c['numberGrade']}"
+            document.getElementById(f"GPA-{i}").textContent = f"GPA: {c['gpaGrade']}"
+
+    # Initialize grades on page load
+    convert_number_grades()
+    def gpa_calc():
+        weighted_gpa_list = []
+        unweighted_gpa_list = []
+        for c in classesList:
+            weighted_gpa_list.append(float(c["gpaGrade"]))
+            unweighted_gpa_list.append(c["unweightedGpaGrade"])
+        weighted_gpa = sum(weighted_gpa_list) / len(weighted_gpa_list)
+        weighted_gpa_div = document.getElementById("weighted-gpa-box")
+        weighted_gpa_text = document.createElement("h2")
+        weighted_gpa_text.textContent = f"{weighted_gpa:.3f}"
+        weighted_gpa_text.classList.add("gpa-text")
+        weighted_gpa_div.appendChild(weighted_gpa_text)
+        unweighted_gpa = sum(unweighted_gpa_list) / len(unweighted_gpa_list)
+        unweighted_gpa_div = document.getElementById("unweighted-gpa-box")
+        unweighted_gpa_text = document.createElement("h2")
+        unweighted_gpa_text.textContent = f"{unweighted_gpa:.3f}"
+        unweighted_gpa_text.classList.add("gpa-text")
+        unweighted_gpa_div.appendChild(unweighted_gpa_text)
+
+
+            
+
+
+    gpa_calc()
+
+      
     </py-script>
 
     <script>
@@ -310,8 +434,8 @@ convert_number_grades()
                         box.classList.add('hidden');
                     }
                 });
+                
             });
-
             // Add click handlers for boxes
             document.querySelectorAll('.box').forEach(box => {
                 box.addEventListener('click', function(event) {
@@ -319,6 +443,18 @@ convert_number_grades()
                     const grade = this.querySelector("p").textContent;
                     const numberGrade = grade.split(': ')[1]
                     window.location.href = `class_page.html?numberGrade=${encodeURIComponent(numberGrade)}&class=${encodeURIComponent(classTitle)}`;
+                });
+            });
+            document.getElementById('gpa-dropdown').addEventListener('change', function() {
+                const selectedGpa = this.value;
+                const gpaBoxes = document.querySelectorAll('.gpa-box');
+                gpaBoxes.forEach(gpaBox => {
+                    const gpaBoxGpa = gpaBox.getAttribute('data-class');
+                    if (selectedGpa === 'Both' || selectedGpa === gpaBoxGpa || selectedGpa === 'Select'){
+                        gpaBox.classList.remove('hidden');
+                    } else {
+                        gpaBox.classList.add('hidden');
+                    }
                 });
             });
         });

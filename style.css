@@ -22,14 +22,6 @@ body, html {
     margin-top: 100px; 
 }
 
-.careerplan-link {
-    border: none;
-    border-radius: 14px;
-    display: flex; 
-    padding: 5px;  
-    margin-top: 100px; 
-}
-
 .schedule-link {
     border: none;
     border-radius: 14px;
@@ -50,13 +42,6 @@ div .attendance-header  {
 }
 .attendance-text {
     margin-left: 10px;
-}
-div .careerplan-header {
-    text-align: left;
-    margin-left: 10px;
-}
-.careerplan-text {
-    margin-left: 10px; 
 }
 div .grades-header {
     text-align: left;

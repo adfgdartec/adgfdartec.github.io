@@ -6,8 +6,8 @@
     <title>Class Page - Student Grades</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
-    <link href="class_page.css" rel="stylesheet" type="text/css"/>
     <link rel="website icon" type="jpg" href="emblem.jpg">
+    <link rel="stylesheet" href="class_page.css">
 </head>
 <body>
     <div id="main-box" class="main-box">
@@ -23,10 +23,8 @@
             "
             >
             </a>
-            <li><a href="schedule.html">Schedule</a></li>
-            <li><a href="careerplan.html">Careerplan</a></li>
             <li><a href="index.html">Grades</a></li>
-            <li><a href=gpaCalculator.html>Calendar</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
             <li><a href="attendance.html">Attendance</a></li>
         </ul>
     </div>
@@ -88,10 +86,10 @@
             {"class": "AP World History", "assignments": [
                 {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "8/29/2024"},
                 {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "9/29/2024"},
-                {"name": "Assignment 3", "grade": 84, "type": "Summative", "due_date":  "10/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date":  "10/29/2024"},
                 {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "11/29/2024" },
-                {"name": "Assignment 2", "grade": 93, "type": "Performance", "due_date": "12/29/2024"},
-                {"name": "Assignment 3", "grade": 99, "type": "Performance", "due_date": "1/29/2024"},
+                {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "12/29/2024"},
+                {"name": "Assignment 3", "grade": 89, "type": "Performance", "due_date": "1/29/2024"},
                 {"name": "Assignment 1", "grade": 85, "type": "Summative", "due_date": "2/29/2024"},
                 {"name": "Assignment 2", "grade": 90, "type": "Performance", "due_date": "3/29/2024"},
                 {"name": "Assignment 3", "grade": 89, "type": "Summative", "due_date": "4/29/2024"}
@@ -286,7 +284,7 @@
                     elif (required_performance_grade > 100):
                         result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
                     else:
-                        performance_grades.append(goal_grade)
+                        performance_grades.append(required_performance_grade)
                         performance_avg = sum(performance_grades) / len(performance_grades)
                         grade_avg = round((performance_avg * 0.55) + (summative_grade_avg), 2)
                         result_message = (
@@ -300,20 +298,20 @@
                         (len(summative_grades) + 1) - 
                         sum(summative_grades) * 0.45
                     ) / 0.55
-                    #Aarav took the time to make this formula
+                    # took the time to make this formula
     
                     if (required_summative_grade < 0):
                         result_message = f"You're already on track to exceed your goal grade!"
                     elif (required_summative_grade > 100):
                         result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
                     else:
-                        summative_grades.append(goal_grade)
+                        summative_grades.append(required_summative_grade)
                         summative_avg = sum(summative_grades) / len(summative_grades)
                         new_grade_avg = round((performance_grade_avg * 0.55) + (summative_avg), 2)
                         result_message = (
                             f"To reach your goal grade, you would need a {round(required_summative_grade, 2)} "
                             f"on your next summative assessment. Your current grade average after adding this "
-                            f"assignment would be {grade_avg}."
+                            f"assignment would be {new_grade_avg}."
                         )
                 else: 
                     result_message = "Please select a valid assignment type (Performance or Summative)."
