@@ -58,7 +58,11 @@
             <h2>Goal Grade Calculator</h2>
             <label for="goal-grade">Enter your goal grade:</label>
             <input type="number" id="goal-grade" placeholder="Goal Grade" />
-            <input type="text" id="assignment-type" placeholder="Type Of Assignment(Performance / Summative)"/>
+            <select id="assignment-type">
+                    <option value="">Select Assignment Type</option>
+                    <option value="Performance">Performance</option>
+                    <option value="Summative">Summative</option>
+            </select>
             <button id="calculate-btn">Calculate</button>
             <div id="goal-output"></div> <!-- Output area -->
         </div>
@@ -277,7 +281,6 @@
                         (len(performance_grades) + 1) - 
                         sum(performance_grades) * 0.45
                     ) / 0.55
-                    #Aarav took the time to make this formula
 
                     if (required_performance_grade < 0):
                         result_message = f"You're already on track to exceed your goal grade!"
@@ -286,7 +289,7 @@
                     else:
                         performance_grades.append(required_performance_grade)
                         performance_avg = sum(performance_grades) / len(performance_grades)
-                        grade_avg = round((performance_avg * 0.55) + (summative_grade_avg), 2)
+                        grade_avg = round((performance_avg * 0.55 / 100) + (summative_grade_avg), 2)
                         result_message = (
                             f"To reach your goal grade, you would need a {round(required_performance_grade, 2)} "
                             f"on your next performance task. Your current grade average after adding this "
@@ -307,7 +310,7 @@
                     else:
                         summative_grades.append(required_summative_grade)
                         summative_avg = sum(summative_grades) / len(summative_grades)
-                        new_grade_avg = round((performance_grade_avg * 0.55) + (summative_avg), 2)
+                        new_grade_avg = round((performance_grade_avg) + (summative_avg * 0.55 / 100), 2)
                         result_message = (
                             f"To reach your goal grade, you would need a {round(required_summative_grade, 2)} "
                             f"on your next summative assessment. Your current grade average after adding this "
