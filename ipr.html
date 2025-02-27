@@ -32,79 +32,474 @@
     </div>
     <div class="ipr-header-box">
         <h1 class="ipr-header">Interim Progress Report</h1>
+        <div class="dropdown-container">
+            <select id="class-dropdown">
+                <option value="progress_report_1">08/30/24</option>
+                <option value="progress_report_2">09/20/24</option>
+                <option value="progress_report_3">11/01/24</option>
+                <option value="progress_report_4">11/22/24</option>
+                <option value="progress_report_5">1/27/25</option>
+                <option value="progress_report_6">2/18/25</option>
+            </select>
+        </div>
     </div>
-    <table border="1">
+    <table id="ipr-table" border="1">
     </table>
     <py-script>
         from js import document
         from datetime import datetime
+        from pyodide.ffi import create_proxy
         class IPR:
-            classes = {
-                "class_1": {
-                    "class": "AP Computer Science Principles B",
-                    "course_name": "7204B - 7",
-                    "period": "1", 
-                    "teacher_name": "Cook, Andrea",
-                    "room_location": "B102",
-                    "grade_3wk": 99
+            progress_reports = {
+                "progress_report_1": {
+                    "classes": {
+                        "class_1": {
+                            "class": "AP Computer Science Principles A",
+                            "course_name": "7204B - 7",
+                            "period": "1", 
+                            "teacher_name": "Cook, Andrea",
+                            "room_location": "B102",
+                            "grade_3wk": 99
+                        },
+                        "class_2": {
+                            "class": "AP Human Geography A",
+                            "course_name": "4340B - 17",
+                            "period": "2",
+                            "teacher_name": "Mcduffee, Haley",
+                            "room_location": "C103",
+                            "grade_3wk": 95
+                        }, 
+                        "class_3": {
+                            "class": "Algebra II Honors A",
+                            "course_name": "2331B - 2",
+                            "period": "3",
+                            "teacher_name": "Smith, Ginger",
+                            "room_location": "J105",
+                            "grade_3wk": 94
+                        },
+                        "class_4": {
+                            "class": "English I Honors A",
+                            "course_name": "1111B - 5",
+                            "period": "4",
+                            "teacher_name": "Rudorf, Arianna",
+                            "room_location": "J112",
+                            "grade_3wk": 99
+                        },
+                        "class_5": {
+                            "class": "Spanish II Honors A",
+                            "course_name": "6023B - 12",
+                            "period": "5",
+                            "teacher_name": "Conger, Reyna",
+                            "room_location": "A107",
+                            "grade_3wk": 87
+                        },
+                        "class_6": {
+                            "class": "Lifetime Fitness/Wellness A",
+                            "course_name": "5102B - 2",
+                            "period": "6",
+                            "teacher_name": "Garza, Armando",
+                            "room_location": "Gym1",
+                            "grade_3wk": 100
+                        },
+                        "class_7": {
+                            "class": "Biology Honors A",
+                            "course_name": "3111B - 3",
+                            "period": "7",
+                            "teacher_name": "Phadke, Madhavi",
+                            "room_location": "D102",
+                            "grade_3wk": 98
+                        },
+                        "class_8": {
+                            "class": "Prin Of Applied Engineering A",
+                            "course_name": "7300B - 4",
+                            "period": "8",
+                            "teacher_name": "Price, Chad",
+                            "room_location": "B103",
+                            "grade_3wk": 100
+                        },
+                    }
                 },
-                "class_2": {
-                    "class": "AP Human Geography B",
-                    "course_name": "4340B - 17",
-                    "period": "2",
-                    "teacher_name": "Mcduffee, Haley",
-                    "room_location": "C103",
-                    "grade_3wk": 95
-                }, 
-                "class_3": {
-                    "class": "Algebra II Honors B",
-                    "course_name": "2331B - 2",
-                    "period": "3",
-                    "teacher_name": "Smith, Ginger",
-                    "room_location": "J105",
-                    "grade_3wk": 94
+                "progress_report_2": {
+                    "classes": {
+                        "class_1": {
+                            "class": "AP Computer Science Principles A",
+                            "course_name": "7204B - 7",
+                            "period": "1", 
+                            "teacher_name": "Cook, Andrea",
+                            "room_location": "B102",
+                            "grade_3wk": 100
+                        },
+                        "class_2": {
+                            "class": "AP Human Geography A",
+                            "course_name": "4340B - 17",
+                            "period": "2",
+                            "teacher_name": "Mcduffee, Haley",
+                            "room_location": "C103",
+                            "grade_3wk": 92
+                        }, 
+                        "class_3": {
+                            "class": "Algebra II Honors A",
+                            "course_name": "2331B - 2",
+                            "period": "3",
+                            "teacher_name": "Smith, Ginger",
+                            "room_location": "J105",
+                            "grade_3wk": 98
+                        },
+                        "class_4": {
+                            "class": "English I Honors A",
+                            "course_name": "1111B - 5",
+                            "period": "4",
+                            "teacher_name": "Rudorf, Arianna",
+                            "room_location": "J112",
+                            "grade_3wk": 97
+                        },
+                        "class_5": {
+                            "class": "Spanish II Honors A",
+                            "course_name": "6023B - 12",
+                            "period": "5",
+                            "teacher_name": "Conger, Reyna",
+                            "room_location": "A107",
+                            "grade_3wk": 99
+                        },
+                        "class_6": {
+                            "class": "Lifetime Fitness/Wellness A",
+                            "course_name": "5102B - 2",
+                            "period": "6",
+                            "teacher_name": "Garza, Armando",
+                            "room_location": "Gym1",
+                            "grade_3wk": 100
+                        },
+                        "class_7": {
+                            "class": "Biology Honors A",
+                            "course_name": "3111B - 3",
+                            "period": "7",
+                            "teacher_name": "Phadke, Madhavi",
+                            "room_location": "D102",
+                            "grade_3wk": 99
+                        },
+                        "class_8": {
+                            "class": "Prin Of Applied Engineering A",
+                            "course_name": "7300B - 4",
+                            "period": "8",
+                            "teacher_name": "Price, Chad",
+                            "room_location": "B103",
+                            "grade_3wk": 100
+                        },
+                    }
                 },
-                "class_4": {
-                    "class": "English I Honors B",
-                    "course_name": "1111B - 5",
-                    "period": "4",
-                    "teacher_name": "Rudorf, Arianna",
-                    "room_location": "J112",
-                    "grade_3wk": 99
+                "progress_report_3": {
+                    "classes": {
+                        "class_1": {
+                            "class": "AP Computer Science Principles A",
+                            "course_name": "7204B - 7",
+                            "period": "1", 
+                            "teacher_name": "Cook, Andrea",
+                            "room_location": "B102",
+                            "grade_3wk": 78
+                        },
+                        "class_2": {
+                            "class": "AP Human Geography A",
+                            "course_name": "4340B - 17",
+                            "period": "2",
+                            "teacher_name": "Mcduffee, Haley",
+                            "room_location": "C103",
+                            "grade_3wk": 85
+                        }, 
+                        "class_3": {
+                            "class": "Algebra II Honors A",
+                            "course_name": "2331B - 2",
+                            "period": "3",
+                            "teacher_name": "Smith, Ginger",
+                            "room_location": "J105",
+                            "grade_3wk": 74
+                        },
+                        "class_4": {
+                            "class": "English I Honors A",
+                            "course_name": "1111B - 5",
+                            "period": "4",
+                            "teacher_name": "Rudorf, Arianna",
+                            "room_location": "J112",
+                            "grade_3wk": 89
+                        },
+                        "class_5": {
+                            "class": "Spanish II Honors A",
+                            "course_name": "6023B - 12",
+                            "period": "5",
+                            "teacher_name": "Conger, Reyna",
+                            "room_location": "A107",
+                            "grade_3wk": 77
+                        },
+                        "class_6": {
+                            "class": "Lifetime Fitness/Wellness A",
+                            "course_name": "5102B - 2",
+                            "period": "6",
+                            "teacher_name": "Garza, Armando",
+                            "room_location": "Gym1",
+                            "grade_3wk": 100
+                        },
+                        "class_7": {
+                            "class": "Biology Honors A",
+                            "course_name": "3111B - 3",
+                            "period": "7",
+                            "teacher_name": "Phadke, Madhavi",
+                            "room_location": "D102",
+                            "grade_3wk": 98
+                        },
+                        "class_8": {
+                            "class": "Prin Of Applied Engineering A",
+                            "course_name": "7300B - 4",
+                            "period": "8",
+                            "teacher_name": "Price, Chad",
+                            "room_location": "B103",
+                            "grade_3wk": 100
+                        },
+                    }
                 },
-                "class_5": {
-                    "class": "Spanish II Honors B",
-                    "course_name": "6023B - 12",
-                    "period": "5",
-                    "teacher_name": "Conger, Reyna",
-                    "room_location": "A107",
-                    "grade_3wk": 87
+                "progress_report_4": {
+                    "classes": {
+                        "class_1": {
+                            "class": "AP Computer Science Principles A",
+                            "course_name": "7204B - 7",
+                            "period": "1", 
+                            "teacher_name": "Cook, Andrea",
+                            "room_location": "B102",
+                            "grade_3wk": 98
+                        },
+                        "class_2": {
+                            "class": "AP Human Geography A",
+                            "course_name": "4340B - 17",
+                            "period": "2",
+                            "teacher_name": "Mcduffee, Haley",
+                            "room_location": "C103",
+                            "grade_3wk": 96
+                        }, 
+                        "class_3": {
+                            "class": "Algebra II Honors A",
+                            "course_name": "2331B - 2",
+                            "period": "3",
+                            "teacher_name": "Smith, Ginger",
+                            "room_location": "J105",
+                            "grade_3wk": 97
+                        },
+                        "class_4": {
+                            "class": "English I Honors A",
+                            "course_name": "1111B - 5",
+                            "period": "4",
+                            "teacher_name": "Rudorf, Arianna",
+                            "room_location": "J112",
+                            "grade_3wk": 89
+                        },
+                        "class_5": {
+                            "class": "Spanish II Honors A",
+                            "course_name": "6023B - 12",
+                            "period": "5",
+                            "teacher_name": "Conger, Reyna",
+                            "room_location": "A107",
+                            "grade_3wk": 97
+                        },
+                        "class_6": {
+                            "class": "Lifetime Fitness/Wellness A",
+                            "course_name": "5102B - 2",
+                            "period": "6",
+                            "teacher_name": "Garza, Armando",
+                            "room_location": "Gym1",
+                            "grade_3wk": 100
+                        },
+                        "class_7": {
+                            "class": "Biology Honors A",
+                            "course_name": "3111B - 3",
+                            "period": "7",
+                            "teacher_name": "Phadke, Madhavi",
+                            "room_location": "D102",
+                            "grade_3wk": 100
+                        },
+                        "class_8": {
+                            "class": "Prin Of Applied Engineering A",
+                            "course_name": "7300B - 4",
+                            "period": "8",
+                            "teacher_name": "Price, Chad",
+                            "room_location": "B103",
+                            "grade_3wk": 100
+                        },
+                    }
                 },
-                "class_6": {
-                    "class": "Lifetime Fitness/Wellness B",
-                    "course_name": "5102B - 2",
-                    "period": "6",
-                    "teacher_name": "Garza, Armando",
-                    "room_location": "Gym1",
-                    "grade_3wk": 100
+                "progress_report_5": {
+                    "classes": {
+                        "class_1": {
+                            "class": "AP Computer Science Principles B",
+                            "course_name": "7204B - 7",
+                            "period": "1", 
+                            "teacher_name": "Cook, Andrea",
+                            "room_location": "B102",
+                            "grade_3wk": 88
+                        },
+                        "class_2": {
+                            "class": "AP Human Geography B",
+                            "course_name": "4340B - 17",
+                            "period": "2",
+                            "teacher_name": "Mcduffee, Haley",
+                            "room_location": "C103",
+                            "grade_3wk": 93
+                        }, 
+                        "class_3": {
+                            "class": "Algebra II Honors B",
+                            "course_name": "2331B - 2",
+                            "period": "3",
+                            "teacher_name": "Smith, Ginger",
+                            "room_location": "J105",
+                            "grade_3wk": 95
+                        },
+                        "class_4": {
+                            "class": "English I Honors B",
+                            "course_name": "1111B - 5",
+                            "period": "4",
+                            "teacher_name": "Rudorf, Arianna",
+                            "room_location": "J112",
+                            "grade_3wk": 91
+                        },
+                        "class_5": {
+                            "class": "Spanish II Honors B",
+                            "course_name": "6023B - 12",
+                            "period": "5",
+                            "teacher_name": "Conger, Reyna",
+                            "room_location": "A107",
+                            "grade_3wk": 95
+                        },
+                        "class_6": {
+                            "class": "Lifetime Fitness/Wellness B",
+                            "course_name": "5102B - 2",
+                            "period": "6",
+                            "teacher_name": "Garza, Armando",
+                            "room_location": "Gym1",
+                            "grade_3wk": 100
+                        },
+                        "class_7": {
+                            "class": "Biology Honors B",
+                            "course_name": "3111B - 3",
+                            "period": "7",
+                            "teacher_name": "Phadke, Madhavi",
+                            "room_location": "D102",
+                            "grade_3wk": 90
+                        },
+                        "class_8": {
+                            "class": "Prin Of Applied Engineering B",
+                            "course_name": "7300B - 4",
+                            "period": "8",
+                            "teacher_name": "Price, Chad",
+                            "room_location": "B103",
+                            "grade_3wk": 100
+                        },
+                    }
                 },
-                "class_7": {
-                    "class": "Biology Honors B",
-                    "course_name": "3111B - 3",
-                    "period": "7",
-                    "teacher_name": "Phadke, Madhavi",
-                    "room_location": "D102",
-                    "grade_3wk": 98
-                },
-                "class_8": {
-                    "class": "Prin Of Applied Engineering B",
-                    "course_name": "7300B - 4",
-                    "period": "8",
-                    "teacher_name": "Price, Chad",
-                    "room_location": "B103",
-                    "grade_3wk": 100
+                "progress_report_6": {
+                    "classes": {
+                        "class_1": {
+                            "class": "AP Computer Science Principles B",
+                            "course_name": "7204B - 7",
+                            "period": "1", 
+                            "teacher_name": "Cook, Andrea",
+                            "room_location": "B102",
+                            "grade_3wk": 98
+                        },
+                        "class_2": {
+                            "class": "AP Human Geography B",
+                            "course_name": "4340B - 17",
+                            "period": "2",
+                            "teacher_name": "Mcduffee, Haley",
+                            "room_location": "C103",
+                            "grade_3wk": 96
+                        }, 
+                        "class_3": {
+                            "class": "Algebra II Honors B",
+                            "course_name": "2331B - 2",
+                            "period": "3",
+                            "teacher_name": "Smith, Ginger",
+                            "room_location": "J105",
+                            "grade_3wk": 97
+                        },
+                        "class_4": {
+                            "class": "English I Honors B",
+                            "course_name": "1111B - 5",
+                            "period": "4",
+                            "teacher_name": "Rudorf, Arianna",
+                            "room_location": "J112",
+                            "grade_3wk": 89
+                        },
+                        "class_5": {
+                            "class": "Spanish II Honors B",
+                            "course_name": "6023B - 12",
+                            "period": "5",
+                            "teacher_name": "Conger, Reyna",
+                            "room_location": "A107",
+                            "grade_3wk": 97
+                        },
+                        "class_6": {
+                            "class": "Lifetime Fitness/Wellness B",
+                            "course_name": "5102B - 2",
+                            "period": "6",
+                            "teacher_name": "Garza, Armando",
+                            "room_location": "Gym1",
+                            "grade_3wk": 100
+                        },
+                        "class_7": {
+                            "class": "Biology Honors B",
+                            "course_name": "3111B - 3",
+                            "period": "7",
+                            "teacher_name": "Phadke, Madhavi",
+                            "room_location": "D102",
+                            "grade_3wk": 100
+                        },
+                        "class_8": {
+                            "class": "Prin Of Applied Engineering B",
+                            "course_name": "7300B - 4",
+                            "period": "8",
+                            "teacher_name": "Price, Chad",
+                            "room_location": "B103",
+                            "grade_3wk": 100
+                        },
+                    }
                 },
             }
+            
+        def progress_report_details(Event=None):
+                dropdown_value = document.getElementById("class-dropdown").value
+                progress_report = IPR.progress_reports.get(dropdown_value, {"classes": {}})
+                headers = ["Course", "Class", "Period", "Teacher", "Room", "3WK"]
+                table = document.getElementById("ipr-table")
+                table.innerHTML = ""
+                ipr_header_row = document.createElement("tr")
+                for header in headers:
+                    ipr_header = document.createElement("th")
+                    ipr_header.textContent = header
+                    ipr_header.classList.add("ipr-table-header")
+                    ipr_header_row.appendChild(ipr_header)
+                table.appendChild(ipr_header_row)
+                class_data = progress_report["classes"]
+                for class_info in class_data.values():
+                    ipr_data_row = document.createElement("tr")
+                    course_data = [
+                        class_info["class"],
+                        class_info["course_name"],
+                        int(class_info["period"]),
+                        class_info["teacher_name"],
+                        class_info["room_location"],
+                        class_info["grade_3wk"]
+                    ]
+                    for data in course_data:
+                        ipr_data_element = document.createElement("td")
+                        ipr_data_element.textContent = data if data else "N/A"
+                        ipr_data_element.classList.add("ipr-data-element")
+                        ipr_data_row.appendChild(ipr_data_element)
+                    table.appendChild(ipr_data_row)
+
+                    
+            
+                
+        progress_report_details()
+
+        # Add event listener to dropdown
+        dropdown = document.getElementById("class-dropdown")
+        dropdown.addEventListener("change", create_proxy(progress_report_details))
           
 
 
