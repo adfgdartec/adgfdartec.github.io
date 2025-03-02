@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Card</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="reportCard.css" rel="stylesheet" />
+    <link rel="website icon" type="jpeg"" href="emblem.jpg" />
+</head>
+<body>
+    <div id="main-box" class="main-box">
+        <ul>
+            <a 
+            href="home.html">
+            <img src="emblem.jpeg" 
+            width="60px" 
+            height="60px" 
+            style="
+            display: inline-block;
+            border-radius: 50%;
+            "
+            >
+            </a>
+            <li><a href="index.html">Grades</a></li>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="attendance.html">Attendance</a></li>
+            <li><a href="ipr.html">IPR</a></li>
+            <li><a href="reportCard.html">Report Card</a></li>
+        </ul>
+    </div>
+    <div class="reportCard-header-box">
+        <h1 class="reportCard-header">Report Card</h1>
+        <div class="dropdown-container">
+            <select id="class-dropdown">
+                <option value="report_card_1">M1</option>
+                <option value="report_card_2">M2</option>
+                <option value="report_card_3">M3</option>
+                <option value="report_card_4">M4</option>
+            </select>
+        </div>
+    </div>
+    <table id="reportCard-table" border="1">
+    </table>
+    <py-script>
+        from js import document
+        from datetime import datetime
+        from pyodide.ffi import create_proxy
+
+        class ReportCard: 
+            report_cards = {
+                "report_card_1": {
+                    "classes": {
+                        "class_1": {
+                                "class": "AP Computer Science Principles",
+                                "course_name": "7204A - 7",
+                                "period": "1", 
+                                "teacher_name": "Cook, Andrea",
+                                "room_location": "B102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 98,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 0,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_2": {
+                                "class": "AP Human Geography",
+                                "course_name": "4340A - 17",
+                                "period": "2",
+                                "teacher_name": "Mcduffee, Haley",
+                                "room_location": "C103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 88,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 1,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        }, 
+                        "class_3": {
+                                "class": "Algebra II Honors",
+                                "course_name": "2331A - 2",
+                                "period": "3",
+                                "teacher_name": "Smith, Ginger",
+                                "room_location": "J105",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 2,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_4": {
+                                "class": "English I Honors",
+                                "course_name": "1111A - 5",
+                                "period": "4",
+                                "teacher_name": "Rudorf, Arianna",
+                                "room_location": "J112",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 95,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_5": {
+                                "class": "Spanish II Honors",
+                                "course_name": "6023A - 12",
+                                "period": "5",
+                                "teacher_name": "Conger, Reyna",
+                                "room_location": "A107",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 99,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                                
+                        },
+                        "class_6": {
+                                "class": "Lifetime Fitness/Wellness",
+                                "course_name": "5102A - 2",
+                                "period": "6",
+                                "teacher_name": "Garza, Armando",
+                                "room_location": "Gym1",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 1,
+                                "TAR_absence": 0
+                        },
+                        "class_7": {
+                                "class": "Biology Honors",
+                                "course_name": "3111A - 3",
+                                "period": "7",
+                                "teacher_name": "Phadke, Madhavi",
+                                "room_location": "D102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        },
+                        "class_8": {
+                                "class": "Prin Of Applied Engineering",
+                                "course_name": "7300A - 4",
+                                "period": "8",
+                                "teacher_name": "Price, Chad",
+                                "room_location": "B103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 2
+                        },
+                    }
+                },
+                "report_card_2": {
+                    "classes": {
+                        "class_1": {
+                                "class": "AP Computer Science Principles",
+                                "course_name": "7204A - 7",
+                                "period": "1", 
+                                "teacher_name": "Cook, Andrea",
+                                "room_location": "B102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 98,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 0,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_2": {
+                                "class": "AP Human Geography",
+                                "course_name": "4340A - 17",
+                                "period": "2",
+                                "teacher_name": "Mcduffee, Haley",
+                                "room_location": "C103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 88,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 1,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        }, 
+                        "class_3": {
+                                "class": "Algebra II Honors",
+                                "course_name": "2331A - 2",
+                                "period": "3",
+                                "teacher_name": "Smith, Ginger",
+                                "room_location": "J105",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 2,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_4": {
+                                "class": "English I Honors",
+                                "course_name": "1111A - 5",
+                                "period": "4",
+                                "teacher_name": "Rudorf, Arianna",
+                                "room_location": "J112",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 95,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_5": {
+                                "class": "Spanish II Honors",
+                                "course_name": "6023A - 12",
+                                "period": "5",
+                                "teacher_name": "Conger, Reyna",
+                                "room_location": "A107",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 99,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                                
+                        },
+                        "class_6": {
+                                "class": "Lifetime Fitness/Wellness",
+                                "course_name": "5102A - 2",
+                                "period": "6",
+                                "teacher_name": "Garza, Armando",
+                                "room_location": "Gym1",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 1,
+                                "TAR_absence": 0
+                        },
+                        "class_7": {
+                                "class": "Biology Honors",
+                                "course_name": "3111A - 3",
+                                "period": "7",
+                                "teacher_name": "Phadke, Madhavi",
+                                "room_location": "D102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        },
+                        "class_8": {
+                                "class": "Prin Of Applied Engineering",
+                                "course_name": "7300A - 4",
+                                "period": "8",
+                                "teacher_name": "Price, Chad",
+                                "room_location": "B103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 2
+                        },
+                    }
+                },
+                "report_card_1": {
+                    "classes": {
+                        "class_1": {
+                                "class": "AP Computer Science Principles",
+                                "course_name": "7204A - 7",
+                                "period": "1", 
+                                "teacher_name": "Cook, Andrea",
+                                "room_location": "B102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 98,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 0,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_2": {
+                                "class": "AP Human Geography",
+                                "course_name": "4340A - 17",
+                                "period": "2",
+                                "teacher_name": "Mcduffee, Haley",
+                                "room_location": "C103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 88,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 1,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        }, 
+                        "class_3": {
+                                "class": "Algebra II Honors",
+                                "course_name": "2331A - 2",
+                                "period": "3",
+                                "teacher_name": "Smith, Ginger",
+                                "room_location": "J105",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 2,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_4": {
+                                "class": "English I Honors",
+                                "course_name": "1111A - 5",
+                                "period": "4",
+                                "teacher_name": "Rudorf, Arianna",
+                                "room_location": "J112",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 95,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_5": {
+                                "class": "Spanish II Honors",
+                                "course_name": "6023A - 12",
+                                "period": "5",
+                                "teacher_name": "Conger, Reyna",
+                                "room_location": "A107",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 99,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                                
+                        },
+                        "class_6": {
+                                "class": "Lifetime Fitness/Wellness",
+                                "course_name": "5102A - 2",
+                                "period": "6",
+                                "teacher_name": "Garza, Armando",
+                                "room_location": "Gym1",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 1,
+                                "TAR_absence": 0
+                        },
+                        "class_7": {
+                                "class": "Biology Honors",
+                                "course_name": "3111A - 3",
+                                "period": "7",
+                                "teacher_name": "Phadke, Madhavi",
+                                "room_location": "D102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        },
+                        "class_8": {
+                                "class": "Prin Of Applied Engineering",
+                                "course_name": "7300A - 4",
+                                "period": "8",
+                                "teacher_name": "Price, Chad",
+                                "room_location": "B103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.000",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "N/A",
+                                "EXM_Grade": "N/A",
+                                "SEM_Grade": "N/A",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 2
+                        },
+                    }
+                },
+                "report_card_2": {
+                    "classes": {
+                        "class_1": {
+                                "class": "AP Computer Science Principles",
+                                "course_name": "7204A - 7",
+                                "period": "1", 
+                                "teacher_name": "Cook, Andrea",
+                                "room_location": "B102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 0,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_2": {
+                                "class": "AP Human Geography",
+                                "course_name": "4340A - 17",
+                                "period": "2",
+                                "teacher_name": "Mcduffee, Haley",
+                                "room_location": "C103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 1,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        }, 
+                        "class_3": {
+                                "class": "Algebra II Honors",
+                                "course_name": "2331A - 2",
+                                "period": "3",
+                                "teacher_name": "Smith, Ginger",
+                                "room_location": "J105",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 2,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_4": {
+                                "class": "English I Honors",
+                                "course_name": "1111A - 5",
+                                "period": "4",
+                                "teacher_name": "Rudorf, Arianna",
+                                "room_location": "J112",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_5": {
+                                "class": "Spanish II Honors",
+                                "course_name": "6023A - 12",
+                                "period": "5",
+                                "teacher_name": "Conger, Reyna",
+                                "room_location": "A107",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                                
+                        },
+                        "class_6": {
+                                "class": "Lifetime Fitness/Wellness",
+                                "course_name": "5102A - 2",
+                                "period": "6",
+                                "teacher_name": "Garza, Armando",
+                                "room_location": "Gym1",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 1,
+                                "TAR_absence": 0
+                        },
+                        "class_7": {
+                                "class": "Biology Honors",
+                                "course_name": "3111A - 3",
+                                "period": "7",
+                                "teacher_name": "Phadke, Madhavi",
+                                "room_location": "D102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "99",
+                                "SEM_Grade": "98.2",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_8": {
+                                "class": "Prin Of Applied Engineering",
+                                "course_name": "7300A - 4",
+                                "period": "8",
+                                "teacher_name": "Price, Chad",
+                                "room_location": "B103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "99",
+                                "SEM_Grade": "99.9",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 4
+                        },
+                    }
+                },
+                "report_card_3": {
+                    "classes": {
+                        "class_1": {
+                                "class": "AP Computer Science Principles",
+                                "course_name": "7204A - 7",
+                                "period": "1", 
+                                "teacher_name": "Cook, Andrea",
+                                "room_location": "B102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 0,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_2": {
+                                "class": "AP Human Geography",
+                                "course_name": "4340A - 17",
+                                "period": "2",
+                                "teacher_name": "Mcduffee, Haley",
+                                "room_location": "C103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 1,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        }, 
+                        "class_3": {
+                                "class": "Algebra II Honors",
+                                "course_name": "2331A - 2",
+                                "period": "3",
+                                "teacher_name": "Smith, Ginger",
+                                "room_location": "J105",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 2,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_4": {
+                                "class": "English I Honors",
+                                "course_name": "1111A - 5",
+                                "period": "4",
+                                "teacher_name": "Rudorf, Arianna",
+                                "room_location": "J112",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence":2,
+                                "TAR_absence": 2
+                        },
+                        "class_5": {
+                                "class": "Spanish II Honors",
+                                "course_name": "6023A - 12",
+                                "period": "5",
+                                "teacher_name": "Conger, Reyna",
+                                "room_location": "A107",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 3,
+                                "TAR_absence": 2
+                                
+                        },
+                        "class_6": {
+                                "class": "Lifetime Fitness/Wellness",
+                                "course_name": "5102A - 2",
+                                "period": "6",
+                                "teacher_name": "Garza, Armando",
+                                "room_location": "Gym1",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 1,
+                                "TAR_absence": 0
+                        },
+                        "class_7": {
+                                "class": "Biology Honors",
+                                "course_name": "3111A - 3",
+                                "period": "7",
+                                "teacher_name": "Phadke, Madhavi",
+                                "room_location": "D102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": "N/A"
+                        },
+                        "class_8": {
+                                "class": "Prin Of Applied Engineering",
+                                "course_name": "7300A - 4",
+                                "period": "8",
+                                "teacher_name": "Price, Chad",
+                                "room_location": "B103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "99",
+                                "SEM_Grade": "99.9",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 0,
+                                "TAR_absence": 3
+                        },
+                    }
+                },
+                "report_card_4": {
+                    "classes": {
+                        "class_1": {
+                                "class": "AP Computer Science Principles",
+                                "course_name": "7204A - 7",
+                                "period": "1", 
+                                "teacher_name": "Cook, Andrea",
+                                "room_location": "B102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "100",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 0,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_2": {
+                                "class": "AP Human Geography",
+                                "course_name": "4340A - 17",
+                                "period": "2",
+                                "teacher_name": "Mcduffee, Haley",
+                                "room_location": "C103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 1,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                        }, 
+                        "class_3": {
+                                "class": "Algebra II Honors",
+                                "course_name": "2331A - 2",
+                                "period": "3",
+                                "teacher_name": "Smith, Ginger",
+                                "room_location": "J105",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 2,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_4": {
+                                "class": "English I Honors",
+                                "course_name": "1111A - 5",
+                                "period": "4",
+                                "teacher_name": "Rudorf, Arianna",
+                                "room_location": "J112",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 0,
+                                "TAR_absence": 0
+                        },
+                        "class_5": {
+                                "class": "Spanish II Honors",
+                                "course_name": "6023A - 12",
+                                "period": "5",
+                                "teacher_name": "Conger, Reyna",
+                                "room_location": "A107",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 0
+                                
+                        },
+                        "class_6": {
+                                "class": "Lifetime Fitness/Wellness",
+                                "course_name": "5102A - 2",
+                                "period": "6",
+                                "teacher_name": "Garza, Armando",
+                                "room_location": "Gym1",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 1,
+                                "TAR_absence": 0
+                        },
+                        "class_7": {
+                                "class": "Biology Honors",
+                                "course_name": "3111A - 3",
+                                "period": "7",
+                                "teacher_name": "Phadke, Madhavi",
+                                "room_location": "D102",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 96,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "98",
+                                "SEM_Grade": "98",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 3
+                        },
+                        "class_8": {
+                                "class": "Prin Of Applied Engineering",
+                                "course_name": "7300A - 4",
+                                "period": "8",
+                                "teacher_name": "Price, Chad",
+                                "room_location": "B103",
+                                "attempt_credit": "0.500",
+                                "earned_credit": "0.500",
+                                "MP1_Grade": 100,
+                                "MP2_Grade": "100",
+                                "EXM_Grade": "99",
+                                "SEM_Grade": "99.9",
+                                "UNEX_absence": 3,
+                                "EXC_absence": 2,
+                                "TAR_absence": 4
+                        },
+                    }
+                },
+            }
+        def show_reportCard_to_screen(event=None):
+            reportCard_value = document.getElementById("class-dropdown").value
+            headers = ["Course", "Class", "Period", 
+            "Teacher", "Room", "Att.Credit",
+            "Ern.Credit", "MP1", "MP2", 
+            "EXM", "SEM", "UNEX", 
+            "EXC", "TAR"]
+            reportCard = ReportCard.report_cards.get(reportCard_value, {"classes": {}})
+            table = document.getElementById("reportCard-table")
+            table.innerHTML = ""
+            reportCard_header_row = document.createElement("tr")
+            for header in headers:
+                reportCard_header = document.createElement("th")
+                reportCard_header.textContent = header
+                reportCard_header.classList.add("reportCard-table-header")
+                reportCard_header_row.appendChild(reportCard_header)
+            table.appendChild(reportCard_header_row)
+            class_data = reportCard["classes"]
+            for class_info in class_data.values():
+                reportCard_data_row = document.createElement("tr")
+                course_data = [
+                    class_info["course_name"],
+                    class_info["class"],
+                    class_info["period"],
+                    class_info["teacher_name"],
+                    class_info["room_location"],
+                    class_info["attempt_credit"],
+                    class_info["earned_credit"],
+                    class_info["MP1_Grade"],
+                    class_info["MP2_Grade"],
+                    class_info["EXM_Grade"],
+                    class_info["SEM_Grade"],
+                    class_info["UNEX_absence"],
+                    class_info["EXC_absence"],
+                    class_info["TAR_absence"]
+                ]
+
+                for data in course_data:
+                    data_element = document.createElement("td")
+                    data_element.textContent = data if data else "N/A"
+                    data_element.classList.add("reportCard-data-element")
+                    reportCard_data_row.appendChild(data_element)
+                table.appendChild(reportCard_data_row)
+
+
+
+        show_reportCard_to_screen()
+
+        # Add event listener to dropdown
+        dropdown = document.getElementById("class-dropdown")
+        dropdown.addEventListener("change", create_proxy(show_reportCard_to_screen))
+
+
+    </py-script>
+</body>
+</html>
