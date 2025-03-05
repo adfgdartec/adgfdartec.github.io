@@ -1,6 +1,6 @@
 /* Dark Mode Styling for Grades */
 body, html {
-    font-family:  "DM Sans", serif !important;  
+    font-family:  "DM Sans", serif !important;
     height: 100vh;
     background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 415px) no-repeat!important;
     margin: 0;
@@ -39,23 +39,29 @@ body, html {
 div .attendance-header  {
     text-align: left;
     margin-left: 10px;
+    font-family: "DM Sans", serif !important;
 }
 .attendance-text {
     margin-left: 10px;
+    font-family: "DM Sans", serif !important;
 }
 div .grades-header {
     text-align: left;
     margin-left: 10px;
+    font-family: "DM Sans", serif !important;
 }
 .grades-text {
     margin-left: 10px; 
+    font-family: "DM Sans", serif !important;
 }
 div .schedule-header {
     text-align: left;
     margin-left: 10px;
+    font-family: "DM Sans", serif !important;
 }
 .schedule-text{
     margin-left: 10px;
+    font-family: "DM Sans", serif !important;
 }
 .button-container {
     background-color: white;

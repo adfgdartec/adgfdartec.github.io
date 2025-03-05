@@ -27,16 +27,17 @@
             width: 100%;
             height: auto;
             padding: 20px 0;
-            background-color: #1a1d36;
+            background-color: #2196f3;
             z-index: 999;
             text-align: center;
         }
 
         .title-container h1 {
             font-size: clamp(1.5rem, 2vw, 2.5rem);
-            color: #2196f3;
+            color:  white;
             text-transform: uppercase;
             margin: 0 0 15px 0;
+            font-family: "DM Sans", serif !important;
         }
 
         .main-content {
@@ -191,6 +192,7 @@
             border: 2px solid #2196f3;
             border-radius: 10px;
             margin: 10px 0;
+            font-family: "DM Sans", serif !important;
         }
 
         @media screen and (max-width: 1024px) {
@@ -252,7 +254,7 @@
         </ul>
     </div>
     <div class="title-container">
-        <h1>Student Grades Report</h1>
+        <h1 class="main-title">Student Grades Report</h1>
         <select id="class-dropdown">
             <option value="Select">Select A Class</option>
             <option value="All">All Classes</option>
