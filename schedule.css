@@ -43,7 +43,7 @@ table {
     vertical-align: middle;
     margin: 20px auto;
     overflow: hidden;
-    width: 95%; /* Wider on mobile */
+    width: 85%; /* Wider on mobile */
     height: auto;
     font-size: 0.9rem; /* Slightly smaller text on mobile */
 }

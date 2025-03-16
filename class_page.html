@@ -290,7 +290,7 @@
                         summative_grades.append(required_summative_grade)
                         new_summative_avg = sum(summative_grades) / len(summative_grades)
                         ovr_grade = round((new_summative_avg * 0.45) + (performance_grade_avg * 0.55) ,2)
-                        result_message = (f"To reach your goal grade, you would need a {round(required_summative_grade, 2)} on your next summative assignment." 
+                        result_message = (f"To reach your goal grade, you would need a {round(required_summative_grade)} on your next summative assignment." 
                         f"Your current average grade after adding this grade will be {ovr_grade}.")
                 if grade_type.lower() == "performance":
                     required_performance_grade = (len(performance_grades) + 1) * ((goal_grade -(0.45 * summative_grade_avg)) / 0.55) - sum(performance_grades)
@@ -303,7 +303,7 @@
                         performance_grades.append(required_performance_grade)
                         new_performance_avg = sum(performance_grades) / len(performance_grades)
                         ovr_grade = round((new_performance_avg * 0.55) + (summative_grade_avg * 0.45), 2)
-                        result_message = (f"To reach your goal grade, you would need a {round(required_performance_grade, 2)} on your next performance assignment." 
+                        result_message = (f"To reach your goal grade, you would need a {round(required_performance_grade)} on your next performance assignment." 
                         f"Your current average grade after adding this grade will be {ovr_grade}.")
 
                 goal_output_element.textContent = result_message
