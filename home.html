@@ -31,11 +31,15 @@
                 <li><a href="attendance.html">Attendance</a></li>
                 <li><a href="ipr.html">IPR</a></li>
                 <li><a href="reportCard.html">Report Card</a></li>
-                <li><a href="transcript.html">Transcript</a></li>
             </ul>
         </div>
         <div class="header-div">
         <h1 class="header">GradeBook Home</h1>
+        <p>This is a redesign of Home Access Center. If you are familiar with that software, this website<br> 
+            is a much better version and overall is much more easier to use compared to that site. Simply put, <br>
+            you can use this site by clicking on the links in the navbar to the many pages of the site, and then <br>
+            have access to all the amamzing data of class grades, schedule, and so much more!
+        </p>
         </div>
          <ul>
                 <button 
@@ -91,6 +95,42 @@
             </div>
             </button>
      </ul>
+     <ul>
+        <button 
+            class="ipr-link"
+            onClick="getToIpr()"
+        >
+        <div class="button-container">
+            <span class="material-icons">grading</span>
+        </div>
+        <div>
+        <h3 class="ipr-header">
+            IPR
+        </h3>
+        <p class="ipr-text">
+           See your Interim Progress Reports
+        </p>
+        </div>
+        </button>
+ </ul>
+ <ul>
+        <button  
+            class="reportCard-link"
+            onClick="getToReportCard()"
+        >
+        <div class="button-container">
+            <span class="material-icons">event</span>
+        </div>
+        <div>
+        <h3 class="reportCard-header">
+           Report Card
+        </h3>
+        <p class="reportCard-text">
+           See your most recent report card
+        </p>
+        </div>
+        </button>  
+ </ul>
     </body>
      <script>
         function getToGrades(){
@@ -101,6 +141,12 @@
         }
         function getToSchedule(){
             window.location.href="schedule.html"
+        }
+        function getToIpr(){
+            window.location.href="ipr.html"
+        }
+        function getToReportCard(){
+            window.location.href="reportCard.html"
         }
      </script>
 </html>

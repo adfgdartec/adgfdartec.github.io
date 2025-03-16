@@ -1,27 +1,29 @@
 body, html {
-    font-family:  "DM Sans", serif !important;
+    font-family: "DM Sans", serif !important;
     height: 100vh;
     background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 415px) no-repeat;
     margin: 0;
     padding: 0;
-    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-y: auto;
 }
 
 .main-header {
     text-align: center;
     color: white;
+    padding: 0 10px; /* Add padding for small screens */
 }
-
 
 .dropdown-container {
     text-align: center;
     background-color: #2196f3;
-    height: 190px;
+    height: auto; /* Changed from fixed height */
+    min-height: 150px; /* Minimum height */
     width: 100%;
-    margin-top: 10vh;
+    margin-top: 60px; /* Reduced margin for mobile */
     position: relative;
-    background-color: #2196f3;
+    padding: 15px 0; /* Add padding */
 }
+
 #class-dropdown {
     padding: 10px;
     font-size: 1rem;
@@ -30,7 +32,7 @@ body, html {
     border: 2px solid #2196f3;
     border-radius: 10px;
     margin: -5px 0;
-    font-family:  "DM Sans", serif !important;
+    font-family: "DM Sans", serif !important;
 }
 
 table {
@@ -41,22 +43,23 @@ table {
     vertical-align: middle;
     margin: 20px auto;
     overflow: hidden;
-    width: 85%;
+    width: 95%; /* Wider on mobile */
     height: auto;
+    font-size: 0.9rem; /* Slightly smaller text on mobile */
 }
 
 th, td {
     border: none;
-    padding: 8px;
+    padding: 8px 4px; /* Reduced horizontal padding */
 }
 
 th {
     width: 25%;
     background-color: #333;
     color: white;
-    font-size: 0.875rem;
+    font-size: 0.8rem; /* Smaller font for headers */
     text-transform: uppercase;
-    letter-spacing: 2%;
+    letter-spacing: 1%; /* Reduced letter spacing */
 }
 
 tr:nth-child(odd) {
@@ -68,7 +71,7 @@ tr:nth-child(even) {
 }
 
 select {
-    padding: 12px;
+    padding: 10px;
     font-size: 12px;
     border-radius: 5px;
     border: 1px solid black;
@@ -76,18 +79,22 @@ select {
     top: 0px;
     color: black;
     margin-top: 20px;
+    width: 90%; /* Wider on mobile */
+    max-width: 300px;
 }
 
 .hidden {
     display: none;
 }
+
 .main-box {
     display: grid;
     place-items: center;
-    height: 10vh;
+    height: 100px;
     width: 100%;
     position: fixed; /* Ensures it stays fixed on the screen */
     top: 0; /* Stays at the top */
+    left: 0;
     z-index: 1000; /* Keeps it above other elements */
     background: black;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: shadow for better visibility */
@@ -112,7 +119,8 @@ select {
     margin-left: 20px;
     margin-right: 20px;
     font-size: 30px;
-    font-family:  "DM Sans", serif !important;   
-     align-items: center;
+    font-family:  "DM Sans", serif !important; 
+    align-items: center;
     font-weight: bold;
+
 }

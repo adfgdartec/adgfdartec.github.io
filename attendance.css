@@ -1,6 +1,6 @@
 
 body, html {
-    font-family:  "DM Sans", serif !important;    
+    font-family:  "DM Sans", serif !important;
     height: 100vh;
     background: hsl(37, 10%, 8%) linear-gradient(to bottom, hsl(37, 10%, 16%), hsl(37, 10%, 8%) 100%) no-repeat!important;
     width: 100%;
@@ -22,10 +22,12 @@ body, html {
     color: white;
     
 }
+
 .header {
     font-weight: bold;
     background-color: #64B5F6;
     color: white;
+
 }
 .color-legend {
     border: 1px solid #ddd;
@@ -53,7 +55,6 @@ body, html {
 .next-button {
     border: none;
     border-radius: 10px;
-
 }
 .current-month {
     margin-left: 20px;
@@ -150,14 +151,15 @@ body, html {
 .main-box {
     display: grid;
     place-items: center;
-    height: 100px;
+    height: 10vh;
     width: 100%;
-    position: fixed; /* Ensures it stays fixed on the screen */
+    position: fixed; 
     top: 0; /* Stays at the top */
-    left: 0;
     z-index: 1000; /* Keeps it above other elements */
     background: black;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: shadow for better visibility */
+    margin: 0;
+    padding: 0;
 }
 .main-box ul {
     display: flex; /* Flexbox for alignment */
@@ -179,8 +181,71 @@ body, html {
     margin-left: 20px;
     margin-right: 20px;
     font-size: 30px;
-    font-family:  "DM Sans", serif !important; 
+    font-family:  "DM Sans", serif !important;        
     align-items: center;
     font-weight: bold;
+}
+@media screen and (max-width: 1024px) {
+    .main-content {
+        margin-top: 220px;
+        width: 100%;
+    }
+    .main-box {
+        width: 100%;
+        height: 12vh;
+    }
+    .main-box ul {
+        width: 100%;
+        height: 30vh;
+        position: absolute;
+        left: 0;
+    }
+    .main-box ul li a {
+        font-size: 20px;
+        padding: 10px;
+    }
+    .attendance-header-box {
+        width: 100%;
+        position: relative;
+        top: 160px;
+        height: auto;
 
+    }
+    .button-box {
+        background-color: hsl(37, 10%, 8%);
+        border-radius: 14px;
+        height: 120px;
+        position: relative; 
+        top: 220px;  
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-box ul {
+        width: 100%;
+        height: 30vh;
+        position: absolute;
+        left: 0;
+        top: 20px;
+        flex-direction: column;
+    }
+    .attendance-header-box {
+        width: 100%;
+        position: relative;
+        top: 280px;
+        height: auto;
+
+    }
+    .main-box {
+        width: 100%;
+        height: 30vh;
+    }
+    .button-box {
+        background-color: hsl(37, 10%, 8%);
+        border-radius: 14px;
+        width: 100%;
+        height: 120px;
+        position: relative; 
+        top: 220px;  
+    }
 }

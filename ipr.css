@@ -37,7 +37,7 @@ body, html {
     margin-left: 20px;
     margin-right: 20px;
     font-size: 30px;
-    font-family:  "DM Sans", serif !important;    
+    font-family:  "DM Sans", serif !important; 
     align-items: center;
     font-weight: bold;
 
@@ -52,7 +52,7 @@ body, html {
 .ipr-header-box {
     display: grid;
     place-items: center;
-    height: 150px;
+    height: 200px;
     width: 100%; /* Ensures it spans the full width of the viewport */
     position: absolute; /* Keeps the header at the top while scrolling */
     top: 80px;
@@ -70,7 +70,7 @@ table {
     overflow: hidden;
     width: 85%;
     height: auto;
-    margin-top: 250px;
+    margin-top: 300px;
 }
 
 th, td {

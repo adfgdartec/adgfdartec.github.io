@@ -13,40 +13,42 @@
     <link rel="website icon" type="jpeg"" href="emblem.jpg" />
 </head>
 <body>
-    <div id="main-box" class="main-box">
-        <ul>
-            <a 
-            href="home.html">
-            <img src="emblem.jpeg" 
-            width="60px" 
-            height="60px" 
-            style="
-            display: inline-block;
-            border-radius: 50%;
-            "
-            >
-            </a>
-            <li><a href="index.html">Grades</a></li>
-            <li><a href="schedule.html">Schedule</a></li>
-            <li><a href="attendance.html">Attendance</a></li>
-            <li><a href="ipr.html">IPR</a></li>
-            <li><a href="reportCard.html">Report Card</a></li>
-            <li><a href="transcript.html">Transcript</a></li>
-        </ul>
-    </div>
-    <div class="attendance-header-box">
-        <h1 class="attendance-header">Attendance Calendar</h1>   
-    </div>
-    <div class="button-box">
-        <button id="prev-button" class="prev-button"><span class="material-icons">arrow_back_ios</span></button>
-        <span id="current-month" class="current-month"></span>
-        <button id="next-button" class="next-button"><span class="material-icons">arrow_forward_ios</span></button>
-    </div>
-    
+        <div id="main-box" class="main-box">
+            <ul>
+                <a 
+                href="home.html">
+                <img src="emblem.jpeg" 
+                width="60px" 
+                height="60px" 
+                style="
+                display: inline-block;
+                border-radius: 50%;
+                "
+                >
+                </a>
+                <li><a href="index.html">Grades</a></li>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="attendance.html">Attendance</a></li>
+                <li><a href="ipr.html">IPR</a></li>
+                <li><a href="reportCard.html">Report Card</a></li>
+            </ul>
+        </div>
+        <div class="attendance-header-box">
+            <h1 class="attendance-header">Attendance Calendar</h1>   
+        </div>
+        <div class="main-content">
+            <div class="button-box">
+                <button id="prev-button" class="prev-button"><span class="material-icons">arrow_back_ios</span></button>
+                <span id="current-month" class="current-month"></span>
+                <button id="next-button" class="next-button"><span class="material-icons">arrow_forward_ios</span></button>
+            </div>
+            
 
-    <div id="calendar"></div>
-    <div id="color-legend">
-    </div>
+            <div id="calendar"></div>
+            <div id="color-legend">
+            </div>
+        </div>
+
     <py-script>
         from js import document, window
         import calendar

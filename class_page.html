@@ -30,11 +30,10 @@
             <li><a href="attendance.html">Attendance</a></li>
             <li><a href="ipr.html">IPR</a></li>
             <li><a href="reportCard.html">Report Card</a></li>
-            <li><a href="transcript.html">Transcript</a></li>
         </ul>
     </div>
     <div class="container">
-        <div class="title-container">
+        <section class="title-container">
             <h1 id="class-title"></h1>
             <h1 id="class-grade"></h1>
             <select class="marking-period-filter">
@@ -44,7 +43,7 @@
                 <option value="M3">M3</option>
                 <option value="M4">M4</option>
             </select>
-        </div>
+        </section>
         <table id="assignments-table" class="noBorder">
             <thead>
                 <tr>
@@ -280,53 +279,35 @@
                 weighted_avg, performance_grades, summative_grades, performance_grade_avg, summative_grade_avg = calculate_class_grades(assignments) 
                 goal_grade = float(goal_grade_input.value)
                 grade_type = str(grade_type_element.value)
-                if grade_type.lower() == "performance".lower():
-                    required_performance_grade = (
-                        (goal_grade - (summative_grade_avg * 0.45)) * 
-                        (len(performance_grades) + 1) - 
-                        sum(performance_grades) * 0.45
-                    ) / 0.55
-
-                    if (required_performance_grade < 0):
+                if grade_type.lower() == "summative":
+                    required_summative_grade = (len(summative_grades) + 1) * ((goal_grade-(0.55 * performance_grade_avg)) / 0.45) - sum(summative_grades)
+                    if required_summative_grade < 0:
                         result_message = f"You're already on track to exceed your goal grade!"
-                    elif (required_performance_grade > 100):
+                    elif required_summative_grade > 100:
                         result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
                     else:
-                        performance_grades.append(required_performance_grade)
-                        performance_avg = sum(performance_grades) / len(performance_grades)
-                        grade_avg = round((performance_avg * 0.55 / 100) + (summative_grade_avg), 2)
-                        result_message = (
-                            f"To reach your goal grade, you would need a {round(required_performance_grade, 2)} "
-                            f"on your next performance task. Your current grade average after adding this "
-                            f"assignment would be {grade_avg}."
-                        )
-                elif grade_type.lower() == "summative".lower():
-                    required_summative_grade = (
-                        (goal_grade - (performance_grade_avg * 0.45)) * 
-                        (len(summative_grades) + 1) - 
-                        sum(summative_grades) * 0.45
-                    ) / 0.55
-                    # took the time to make this formula
-    
-                    if (required_summative_grade < 0):
-                        result_message = f"You're already on track to exceed your goal grade!"
-                    elif (required_summative_grade > 100):
-                        result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
-                    else:
+                        #if required grade is possible, add it to other grades and get avg
                         summative_grades.append(required_summative_grade)
-                        summative_avg = sum(summative_grades) / len(summative_grades)
-                        new_grade_avg = round((performance_grade_avg) + (summative_avg * 0.55 / 100), 2)
-                        result_message = (
-                            f"To reach your goal grade, you would need a {round(required_summative_grade, 2)} "
-                            f"on your next summative assessment. Your current grade average after adding this "
-                            f"assignment would be {new_grade_avg}."
-                        )
-                else: 
-                    result_message = "Please select a valid assignment type (Performance or Summative)."
-        
+                        new_summative_avg = sum(summative_grades) / len(summative_grades)
+                        ovr_grade = round((new_summative_avg * 0.45) + (performance_grade_avg * 0.55) ,2)
+                        result_message = (f"To reach your goal grade, you would need a {round(required_summative_grade, 2)} on your next summative assignment." 
+                        f"Your current average grade after adding this grade will be {ovr_grade}.")
+                if grade_type.lower() == "performance":
+                    required_performance_grade = (len(performance_grades) + 1) * ((goal_grade -(0.45 * summative_grade_avg)) / 0.55) - sum(performance_grades)
+                    if required_performance_grade < 0:
+                        result_message = result_message = f"You're already on track to exceed your goal grade!"
+                    elif required_performance_grade > 100:
+                        result_message = f"Unfortunately, you cannot reach your goal grade with a performance assignment. But don't worry, you got this!"
+                    else:
+                        # if req grade is possible, add it to other grades and get new avg
+                        performance_grades.append(required_performance_grade)
+                        new_performance_avg = sum(performance_grades) / len(performance_grades)
+                        ovr_grade = round((new_performance_avg * 0.55) + (summative_grade_avg * 0.45), 2)
+                        result_message = (f"To reach your goal grade, you would need a {round(required_performance_grade, 2)} on your next performance assignment." 
+                        f"Your current average grade after adding this grade will be {ovr_grade}.")
 
                 goal_output_element.textContent = result_message
-
+                            
             except ValueError:
                 window.alert("Invalid input. Please enter a numeric value.")
 

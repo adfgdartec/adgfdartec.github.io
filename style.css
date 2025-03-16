@@ -29,6 +29,20 @@ body, html {
     padding: 5px;
     margin-top: 100px; 
 }
+.ipr-link {
+    border: none;
+    border-radius: 14px;
+    display: flex;
+    padding: 5px;
+    margin-top: 100px; 
+}
+.reportCard-link {
+    border: none;
+    border-radius: 14px;
+    display: flex;
+    padding: 5px;
+    margin-top: 100px; 
+}
 .material-icons {
     margin-right: 8px;
     margin-top: 20px;
@@ -63,6 +77,24 @@ div .schedule-header {
     margin-left: 10px;
     font-family: "DM Sans", serif !important;
 }
+div .ipr-header {
+    text-align: left;
+    margin-left: 10px;
+    font-family: "DM Sans", serif !important;
+}
+.ipr-text{
+    margin-left: 10px;
+    font-family: "DM Sans", serif !important;
+}
+div .reportCard-header {
+    text-align: left;
+    margin-left: 10px;
+    font-family: "DM Sans", serif !important;
+}
+.reportCard-text{
+    margin-left: 10px;
+    font-family: "DM Sans", serif !important;
+}
 .button-container {
     background-color: white;
     border-radius: 12px;
@@ -78,13 +110,12 @@ button {
 }
 .header {
     color: white;
-    margin-left: 35%;
-    margin-right:30%;
+    text-align: center;
 
 }
 .header-div {
     background-color: #2196f3;
-    height: 12vh;          
+    height: 27vh;          
     width: 100%;           
     position: relative;        
     top: 90px;
