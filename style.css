@@ -157,6 +157,9 @@ button {
     align-items: center;
     font-weight: bold;
 }
+.description {
+    color: white;
+}
 
 
 
